@@ -60,8 +60,8 @@ services:
     container_name: keycloak
     environment:
     # Demonstration purposes
-      - KEYCLOAK_USER=lidl
-      - KEYCLOAK_PASSWORD=lidl
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
     restart: always
     networks:
       - getitdone
