@@ -15,6 +15,17 @@
    5. In the client settings, change "access type" to "confidential", then "Valid redirect URIs" to `http://localhost:8080/api/login-callback`. Click save.
    6. Go to credentials tab, copy the secret and paste into `server/secrets.ts`.
 6. Done! Now visit `localhost:8080` and login/register as needed.
+### API reference
+
+| Route | Require auth | Description |
+| --- | --- | --- |
+| `GET /api/hello` | No | For testing, returns a message that says current username. |
+| `GET /api/tasks` | No | For testing, returns every task |
+| `GET /api/lists` | No | For testing, returns every list |
+| `GET /api/login` | N/A | Use KeyCloak for login/register |
+| `GET /api/login-callback | N/A | Callback function invoked by KeyCloak |
+| `POST /api/logout` | N/A | Logout current session |
+| `GET /api/user_lists` | Yes | Return every list that belongs to the currently logged in user |
 
 ## Description
 
