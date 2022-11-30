@@ -14,14 +14,16 @@ export interface Task {
 export interface List {
   id: number
   name: string
-  owner_id: string
+  owner: string
 }
 
 export interface User {
-  id: string
-  first_name: string
-  last_name: string
-  username: string
+  _id: string
+  name: string
+  sub: string
+  preferred_username: string
+  given_name: string
+  family_name: string
   email: string
-  password: string
+  email_verified: boolean
 }

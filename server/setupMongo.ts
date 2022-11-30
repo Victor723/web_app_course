@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId } from 'mongodb'
+import { MongoClient } from 'mongodb'
 import { Task, List, User } from './data'
 
 // Connection URL
@@ -7,159 +7,155 @@ const client = new MongoClient(url)
 
 const tasks: Task[] = [
   {
-      "id": 1,
-      "name": "Course project",
-      "description": "Course project fall 22",
-      "tags": [
+      id: 1,
+      name: "Course project",
+      description: "Course project fall 22",
+      tags: [
           "course",
           "project",
           "fall22"
       ],
-      "status": "in progress",
-      "start_date": "2021-10-01",
-      "due_date": "2021-12-31",
-      "priority": "high",
-      "pinned": true,
-      "list_id": 1
+      status: "in progress",
+      start_date: "2021-10-01",
+      due_date: "2021-12-31",
+      priority: "high",
+      pinned: true,
+      list_id: 1
   },
   {
-      "id": 2,
-      "name": "Assignment 1",
-      "description": "Assignment 1 for fall 22",
-      "tags": [
+      id: 2,
+      name: "Assignment 1",
+      description: "Assignment 1 for fall 22",
+      tags: [
           "assignment",
           "fall22"
       ],
-      "status": "in progress",
-      "start_date": "2021-10-01",
-      "due_date": "2021-10-31",
-      "priority": "high",
-      "pinned": true,
-      "list_id": 1
+      status: "in progress",
+      start_date: "2021-10-01",
+      due_date: "2021-10-31",
+      priority: "high",
+      pinned: true,
+      list_id: 1
   },
   {
-      "id": 3,
-      "name": "Buy groceries",
-      "description": "Buy groceries for the week",
-      "tags": [
+      id: 3,
+      name: "Buy groceries",
+      description: "Buy groceries for the week",
+      tags: [
           "groceries",
           "food"
       ],
-      "status": "in progress",
-      "start_date": "2021-10-01",
-      "due_date": "2021-10-07",
-      "priority": "medium",
-      "pinned": false,
-      "list_id": 2
+      status: "in progress",
+      start_date: "2021-10-01",
+      due_date: "2021-10-07",
+      priority: "medium",
+      pinned: false,
+      list_id: 2
   },
   {
-      "id": 4,
-      "name": "Buy a new phone",
-      "description": "Buy a new phone",
-      "tags": [
+      id: 4,
+      name: "Buy a new phone",
+      description: "Buy a new phone",
+      tags: [
           "phone",
           "electronics"
       ],
-      "status": "in progress",
-      "start_date": "2021-10-01",
-      "due_date": "2021-10-07",
-      "priority": "high",
-      "pinned": false,
-      "list_id": 2
+      status: "in progress",
+      start_date: "2021-10-01",
+      due_date: "2021-10-07",
+      priority: "high",
+      pinned: false,
+      list_id: 2
   },
   {
-      "id": 5,
-      "name": "Buy a new laptop",
-      "description": "Buy a new laptop",
-      "tags": [
+      id: 5,
+      name: "Buy a new laptop",
+      description: "Buy a new laptop",
+      tags: [
           "laptop",
           "electronics"
       ],
-      "status": "in progress",
-      "start_date": "2021-10-01",
-      "due_date": "2021-10-07",
-      "priority": "high",
-      "pinned": false,
-      "list_id": 2
+      status: "in progress",
+      start_date: "2021-10-01",
+      due_date: "2021-10-07",
+      priority: "high",
+      pinned: false,
+      list_id: 2
   },
   {
-      "id": 6,
+      id: 6,
       "name": "Buy a new car",
-      "description": "Buy a new car",
-      "tags": [
+      description: "Buy a new car",
+      tags: [
           "car",
           "transportation"
       ],
-      "status": "in progress",
-      "start_date": "",
-      "due_date": "",
-      "priority": "high",
-      "pinned": false,
-      "list_id": 2
+      status: "in progress",
+      start_date: "",
+      due_date: "",
+      priority: "high",
+      pinned: false,
+      list_id: 2
   },
   {
-      "id": 7,
-      "name": "Buy a new house",
-      "description": "Buy a new house",
-      "tags": [
+      id: 7,
+      name: "Buy a new house",
+      description: "Buy a new house",
+      tags: [
           "house",
           "real estate"
       ],
-      "status": "in progress",
-      "start_date": "2021-10-01",
-      "due_date": "2021-10-07",
-      "priority": "high",
-      "pinned": false,
-      "list_id": 2
+      status: "in progress",
+      start_date: "2021-10-01",
+      due_date: "2021-10-07",
+      priority: "high",
+      pinned: false,
+      list_id: 2
   }
 ]
 
 const lists: List[] = [
   {
-      "id": 1,
-      "name": "School",
-      "owner_id": "5c9c5b5b-5c9c5b5b-5c9c5b5b-5c9c5b5b-5c9c5b5b"
+      id: 1,
+      name: "School",
+      owner: "johndoe"
   },
   {
-      "id": 2,
-      "name": "Work",
-      "owner_id": "5c9c5b5b-5c9c5b5b-5c9c5b5b-5c9c5b5b-5c9c5b5b"
+      id: 2,
+      name: "Work",
+      owner: "johndoe"
   },
   {
-      "id": 3,
-      "name": "Home",
-      "owner_id": "5c9c5b5b-5c9c5b5b-5c9c5b5b-5c9c5b5b-5c9c5b5b"
+      id: 3,
+      name: "Home",
+      owner: "janedoe"
   }
 ]
 
 const users: User[] = [
   {
-      "id": "5c9c5b5b-5c9c5b5b-5c9c5b5b-5c9c5b5b-5c9c5b5b",
-      "first_name": "John",
-      "last_name": "Doe",
-      "username": "johndoe",
-      "email": "johnd@duke.edu",
-      "password": "password"
-  },
-  {
-      "id": "5c9c5b5b-5c9c5b6b-5c9c5b5b-5c9c5b5b-5c9c5b5b",
-      "first_name": "Jane",
-      "last_name": "Doe",
-      "username": "janedoe",
-      "email": "janed@duke.edu",
-      "password": "password"
+      _id: "johndoe",
+      name: "John Doe",
+      sub: "87db1582-21a6-427b-b963-45ccfe2fde4d",
+      preferred_username: "johndoe",
+      given_name: "John",
+      family_name: "Doe",
+      email: "johndoe@duke.edu",
+      email_verified: false,
   }
 ]
 
 const admins: User[] = [
-    {
-        "id": "5c9c5b5b-5c9c5b5b-5c9c5b5b-5c9c5b5b-5c9c5b5f",
-        "first_name": "Admin",
-        "last_name": "Admin",
-        "username": "admin",
-        "email": "admin@duke.edu",
-        "password": "admin"
-    }
+  {
+    _id: "admin",
+    name: "Admin",
+    sub: "87db1582-22a6-427b-b963-45ccfe2fde4d",
+    preferred_username: "admin",
+    given_name: "Admin",
+    family_name: "Admin",
+    email: "admin@duke.edu",
+    email_verified: false,
+  }
 ]
 
 async function main() {
@@ -167,6 +163,20 @@ async function main() {
   console.log('Connected successfully to MongoDB')
 
   const db = client.db("getitdone")
+
+  // drop existing collections
+  if (await db.listCollections({ name: "tasks" }).hasNext()) {
+    console.log("dropping old tasks", await db.dropCollection("tasks"))
+  }
+  if (await db.listCollections({ name: "lists" }).hasNext()) {
+    console.log("dropping old lists", await db.dropCollection("lists"))
+  }
+  if (await db.listCollections({ name: "users" }).hasNext()) {
+    console.log("dropping old users", await db.dropCollection("users"))
+  }
+  if (await db.listCollections({ name: "admins" }).hasNext()) {
+    console.log("dropping old admins", await db.dropCollection("admins"))
+  }
 
   // set up unique index for upsert
   db.collection("tasks").createIndex(
@@ -176,16 +186,6 @@ async function main() {
 
   db.collection("lists").createIndex(
     { id: 1 }, 
-    { unique: true }
-  )
-
-  db.collection("users").createIndex(
-    { id: 1 }, 
-    { unique: true }
-  )
-
-  db.collection("admins").createIndex(
-    { id: 1 },
     { unique: true }
   )
 

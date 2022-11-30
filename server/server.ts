@@ -78,6 +78,18 @@ function checkAuthenticated(req: Request, res: Response, next: NextFunction) {
   next()
 }
 
+// logout
+app.post(
+  "/api/logout", 
+  (req, res, next) => {
+    req.logout((err) => {
+      if (err) {
+        return next(err)
+      }
+      res.redirect("/")
+    })
+  }
+)
 
 // GET current user
 app.get("/api/user", (req, res) => {
@@ -86,7 +98,7 @@ app.get("/api/user", (req, res) => {
 
 // debug GETs
 app.get("/api/hello", (req, res) => { 
-  res.status(200).json({ message: "Hello, your username is detected as '" + req.user.preferred_username + "'."})
+  res.status(200).json({ message: "Hello, your username is detected as '" + req.user ? "NOT LOGGED IN" :  req.user.preferred_username + "'."})
 })
 
 app.get("/api/tasks", async (req, res) => {
@@ -98,14 +110,11 @@ app.get("/api/lists", async (req, res) => {
   const lists = await db.collection("lists").find().toArray()
   res.status(200).json(lists)
 })
-    
-app.get(
-  "/api/login-callback",
-  passport.authenticate("oidc", {
-    successRedirect: "/",
-    failureRedirect: "/api/login",
-  })
-)
+
+app.get("/api/user_lists", checkAuthenticated, async (req, res) => {
+  const user_lists = await db.collection("lists").find({ owner: req.user.preferred_username }).toArray()
+  res.status(200).json(user_lists)
+})
 
 // connect to Mongo
 client.connect().then(() => {
