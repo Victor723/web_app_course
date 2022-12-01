@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import App from '@/old_App.vue'
+import App from '@/App.vue'
 import DebugScreen from '@/views/DebugScreen.vue'
 
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue"

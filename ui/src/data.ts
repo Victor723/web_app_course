@@ -40,12 +40,12 @@ export const data: TodoList[] = [
 			"name": "My Project",
 			"description": "My Project Description",
 			"tags": [
-				"tag1",
-				"tag2"
+				"with tom",
+				"play"
 			],
 			"status": "In Progress",
-			"startDate": "2018-01-01",
-			"dueDate": "2018-01-30",
+			"startDate": "2025-01-01",
+			"dueDate": "2026-01-30",
 			"priority": "High",
 			"pinned": true}
 		]
@@ -58,12 +58,12 @@ export const data: TodoList[] = [
 			"name": "to Europe",
 			"description": "go travel during break",
 			"tags": [
-				"tag33",
-				"tag44"
+				"with tom",
+				"fun"
 			],
 			"status": "In Progress",
 			"startDate": "2018-12-01",
-			"dueDate": "2018-11-03",
+			"dueDate": "2023-11-03",
 			"priority": "High",
 			"pinned": false}
 		]
@@ -76,17 +76,41 @@ export const data: TodoList[] = [
 			"name": "hand in ppt",
 			"description": "",
 			"tags": [
-				"tag31",
-				"tag2"
+				"personal",
+				"fun"
 			],
 			"status": "In Progress",
 			"startDate": "2015-01-01",
-			"dueDate": "2017-01-31",
+			"dueDate": "2030-01-31",
 			"priority": "Low",
 			"pinned": false}
 		]
     }
 ]
+
+
+
+
+
+
+
+
+
+
+// const today = new Date()
+// const currDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+
+// export function countDays(dueDate: string): number { // 2022-11-30 - 2025-01-01
+// 	// const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+// 	// const year = dueDate[0:5]
+// 	// const firstDate = new Date(2008, 1, 12);
+
+
+// 	// const diffDays = Math.round(Math.abs((firstDate - today) / oneDay));
+//   }
+
+
 
 
 export async function getLists(): Promise<TodoList[]> {

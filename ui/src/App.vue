@@ -6,7 +6,7 @@
     </b-navbar> -->
     
     <b-navbar toggleable="lg" type="dark" :variant="user?.roles?.includes('admin') ? 'info' : 'primary'">
-      <b-navbar-brand href="#">Get It Done</b-navbar-brand>   
+      <b-navbar-brand href="http://localhost:8080/">Get It Done</b-navbar-brand>   
       <b-navbar-brand href="#">
         <span v-if="user?.name">Welcome, {{ user.name }}</span>
         <span v-else>API TESTING PAGE. NOT logged in.</span>
@@ -46,6 +46,8 @@
                 :key="i"
                 class="d-flex justify-content-between align-items-center border-0"
                 :class="{ 'font-weight-bold': selectedList === list.name }"
+                :draggable="true"
+                :fields="list.name"
                 >
                 <b-button @click="handleClickDeleteList(list.name)">delete</b-button> 
                 <span @click="selectList(list.name)" title="list.name">{{ list.name }}</span>
@@ -73,7 +75,7 @@
 
 
           <!-- right side of the screen !!! -->
-          <b-col>
+        <b-col>
                     <!-- header -->
               <!-- <div>
             <template #header> -->
@@ -119,6 +121,109 @@
               </p>
             </div>
 
+            <!-- all deadlines -->
+            <div v-if="selectedList === 'All Deadlines'">
+
+                <b-list-group v-for="list, i in lists">
+                  <b-list-group-item
+                      v-for="item, i in list.items" v-if="(item.status != 'Done' && item.dueDate != '')"
+                      :key="i"
+                      class="d-flex align-items-center border-0">
+                      <b-form-checkbox 
+                          v-model="item.status"
+                          value="Done">
+                      </b-form-checkbox>  
+                      <span @click="loadItem(item, false)" title="item.name">
+                        {{ item.name }}
+                        <b-badge pill variant="primary">{{item.dueDate}}</b-badge>
+                      </span> 
+                      
+                  </b-list-group-item>
+                  
+                </b-list-group>
+
+            </div>
+
+            <!-- upcoming tasks -->
+            <div v-if="selectedList === 'Upcoming Tasks'">
+              <b-list-group v-for="list, i in lists">
+                  <b-list-group-item
+                      v-for="item, i in list.items" v-if="(item.status != 'Done' )"
+                      :key="i"
+                      class="d-flex align-items-center border-0">
+                      <b-form-checkbox 
+                          v-model="item.status"
+                          value="Done">
+                      </b-form-checkbox>  
+                      <span @click="loadItem(item, false)" title="item.name">
+                        {{ item.name }}
+                        <b-badge pill variant="primary">{{item.dueDate}}</b-badge>
+                      </span> 
+                      
+                  </b-list-group-item>
+                  
+                </b-list-group>
+            </div>
+
+
+            <!-- Timeline -->
+            <!--  -->
+            <!--  -->
+
+
+            <!-- Tags -->
+            <div v-if="selectedList === 'Tags'">
+              <b-dropdown
+                :text="selectedTagName"
+                block
+                variant="secondary"
+                class="m-2"
+                menu-class="w-100"
+              >
+              <div v-for="(list, i) in lists" :key="i" v-if="(list.items.length > 0)">
+                <div v-for="(item, j) in list.items" :key="j" v-if="(item.tags.length > 0)">
+                  <b-dropdown-item v-for="(tag, k) in item.tags" :key="k"  @click="()=>{selectedTagName=tag}" >
+                    {{tag}}
+                  </b-dropdown-item>
+                </div>
+              </div>
+              </b-dropdown>
+              
+              <div v-for="(list, i) in lists" :key="i" v-if="(list.items.length > 0)">
+                <div v-for="(item, j) in list.items" :key="j" v-if="(item.status != 'Done' && item.tags.length > 0)">
+                  <b-list-group-item
+                      v-for="tag, k in item.tags" 
+                      :key="k" 
+                      v-if="(tag === selectedTagName)"
+                      class="d-flex align-items-center border-0"
+                  >
+                      <b-form-checkbox v-model="item.status" value="Done"></b-form-checkbox>  
+
+                      <span @click="loadItem(item, false)" title="item.name">{{ item.name }}</span> 
+
+                  </b-list-group-item>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- completed -->
+            <!--  -->
+            <div v-if="selectedList === 'Completed'">
+              <div v-for="(list, i) in lists" :key="i" v-if="(list.items.length > 0)">
+                <div v-for="(item, j) in list.items" :key="j" v-if="(item.status === 'Done')">
+                  <b-list-group-item class="d-flex align-items-center border-0">
+                      <b-form-checkbox v-model="item.status" value="Done"></b-form-checkbox>  
+
+                      <span @click="loadItem(item, false)" title="item.name">
+                        <strike>{{ item.name }}</strike>
+                      </span> 
+
+                  </b-list-group-item>
+                </div>
+              </div>
+            </div>
+
 
             <!-- show items in a list -->
             <div flush v-if="( personalListSelected && !showItemForm)"> 
@@ -129,10 +234,7 @@
                     :key="i"
                     class="d-flex align-items-center border-0"
                 >
-                    <b-form-checkbox 
-                        v-model="item.status"
-                        value="Done">
-                    </b-form-checkbox>  
+                    <b-form-checkbox v-model="item.status" value="Done"></b-form-checkbox>  
 
                     <span @click="loadItem(item, false)" title="item.name">{{ item.name }}</span> 
 
@@ -146,7 +248,7 @@
             </div>
 
             <!-- the task form -->
-          <b-form v-else-if="personalListSelected && showItemForm">
+              <b-form v-if="personalListSelected && showItemForm">
                 <b-form-group id="input-group-1" label="Task item name:" label-for="input-1">
                     <b-form-input 
                     id="input-1" 
@@ -217,12 +319,12 @@
                 </b-form-group>
 
                 <b-button @click="handleClickSaveItem()" type="submit" variant="primary">Save</b-button>
-            </b-form>
+              </b-form>
 
           </div>
 
           
-        </b-card>
+          </b-card>
         </b-col>
       </b-row>
     </b-container>
@@ -241,9 +343,11 @@ import {TodoItem, TodoList, Id, getLists, addItemToList, addList, getList, delet
         functionalListName, data, cloneTemplateForm, updateItemOnList} from './data'
 // import detail from './components/detail.vue' // for showing necessary details on the right part of the screen
 
+// 1. not allow list/item of same name be created; so that can search by name
+// 
 
 
-
+// variables
 const lists: Ref<TodoList[]> = ref(data) // holds all the lists and items and item details
 
 const nameOfListToCreate: Ref<string> = ref('')
@@ -256,11 +360,7 @@ const itemDetails: Ref<TodoItem> = ref(cloneTemplateForm(blankItemForm))
 
 const isAddItem: Ref<boolean> = ref(false) // whether to add item to list when 'save' is clicked
 
-// 1. not allow list/item of same name be created; so that can search by name
-// 
-
-const yes:string='Done'
-const no:string='In Progress'
+const selectedTagName: Ref<string> = ref('Select a tag')
 
 
 
@@ -270,7 +370,6 @@ provide("user", user)
 onMounted(async () => {
   user.value = await (await fetch("/api/user")).json()
 })
-
 
 
 // computed ref
@@ -295,8 +394,9 @@ const personalListSelected = computed(() => { // return if a selected list is pe
 // })// {name:'', description:'', tags:[], status:null, priority:null,startDate:'', dueDate:'',pinned:false}
 
 
-// watch
 
+
+// watch
 watch (
   selectedList,
   () => {
@@ -306,9 +406,8 @@ watch (
 
 
 
-
-
 ////// functions:
+
 
 async function handleClickAddList() {
   if (nameOfListToCreate.value != '') {
@@ -381,10 +480,10 @@ function loadItem(item: TodoItem, toAdd: boolean) { // when an item is clicked o
 }
 
 
-function handleClickCheckItem(item: TodoItem) {
-  updateItemOnList(selectedList.value!.id, itemId, { completed })
-  refreshSelectedList()
-}
+// function handleClickCheckItem(item: TodoItem) {
+//   updateItemOnList(selectedList.value!.id, itemId, { completed })
+//   refreshSelectedList()
+// }
 
 
 // function handleClickDeleteItem(itemId: Id){
