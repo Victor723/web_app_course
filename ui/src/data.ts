@@ -6,7 +6,7 @@ export interface TodoItem {
 	description: string
 	tags: string[]
 	status: 'In Progress' | 'Done'
-	priority: 'High' | 'Low' | null
+	priority: 'High' | 'Medium' | 'Low' | null
 	startDate: string
 	dueDate: string
 	pinned: boolean
@@ -27,14 +27,13 @@ export interface TodoList {
 
 export const functionalListName: string[] = ['All Tasks', 'All Deadlines', 'Upcoming Tasks', 'Timeline', 'Tags', 'Completed']
 
-export const blankItemForm: TodoItem = {name:'', description:'', tags:[], status:'In Progress', priority:null,
-										startDate:'', dueDate:'',pinned:false}
+export const blankItemForm: TodoItem = {name:'', description:'', tags:[], status:'In Progress', priority:null, startDate:'', dueDate:'',pinned:false}
 
 
 export const data: TodoList[] = [
     {
         "id":'x1',
-		'name':'school',
+		'name':'School',
 		"items":[
 			{
 			"name": "My Project",
@@ -47,12 +46,24 @@ export const data: TodoList[] = [
 			"startDate": "2025-01-01",
 			"dueDate": "2026-01-30",
 			"priority": "High",
-			"pinned": true}
+			"pinned": false},
+			{
+				"name": "final exam",
+				"description": "bio exam",
+				"tags": [
+					"urgent",
+					"play"
+				],
+				"status": "In Progress",
+				"startDate": "2025-01-01",
+				"dueDate": "2023-01-30",
+				"priority": "High",
+				"pinned": true}
 		]
     },
     {
         "id":'x3',
-		'name':'life',
+		'name':'Life',
 		"items":[
 			{
 			"name": "to Europe",
@@ -64,13 +75,13 @@ export const data: TodoList[] = [
 			"status": "In Progress",
 			"startDate": "2018-12-01",
 			"dueDate": "2023-11-03",
-			"priority": "High",
+			"priority": "Low",
 			"pinned": false}
 		]
     },
 	{
         "id":'x5',
-		'name':'work',
+		'name':'Work',
 		"items":[
 			{
 			"name": "hand in ppt",
