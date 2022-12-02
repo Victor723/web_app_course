@@ -8,6 +8,7 @@ import MongoStore from 'connect-mongo'
 import { Issuer, Strategy } from 'openid-client'
 import passport from 'passport'
 import { keycloak } from "./secrets"
+import { Task, List } from './data'
 
 if (process.env.PROXY_KEYCLOAK_TO_LOCALHOST) {
   // NOTE: this is a hack to allow Keycloak to run from the 
@@ -113,15 +114,27 @@ app.get("/api/lists", async (req, res) => {
 
 app.get("/api/user_lists", checkAuthenticated, async (req, res) => {
   const user_lists = await db.collection("lists").find({ owner: req.user.preferred_username }).toArray()
-  res.status(200).json(user_lists)
+  const updated_lists = user_lists.map(list => {
+    const updated_list = Object.assign({}, list, { items: db.collection("tasks").find({ list_id: list._id }).toArray() })
+    return updated_list
+  })
+  res.status(200).json(updated_lists)
 })
 
 // Create a new list for the current user
 app.post("/api/create_list", checkAuthenticated, async (req, res) => {
-  const list = req.body
-  list.owner = req.user.preferred_username
-  const result = await db.collection("lists").insertOne(list)
-  res.status(200).json(result)
+  const name = req.body.name
+  const existingList = await db.collection("lists").findOne({ name: name, owner: req.user.preferred_username })
+  if (existingList) {
+    return res.status(400).json({ error: "A list with the given name already exists" })
+  }
+  const list = await db.collection("lists").insertOne({ name: name, owner: req.user.preferred_username })
+  
+  // const res = list.map(list => {
+  //   const updated_list = Object.assign({}, list, { items: db.collection("tasks").find({ list_id: list._id }).toArray() })
+  //   return updated_list
+  // })
+  res.status(200).json(list)
 })
 
 // connect to Mongo

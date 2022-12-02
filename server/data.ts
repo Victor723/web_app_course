@@ -1,18 +1,16 @@
 export interface Task {
-  id: number
   name: string
   description: string
   tags: string[]
   status: string
-  start_date: string
-  due_date: string
+  startDate: string
+  dueDate: string
   priority: string
   pinned: boolean
   list_id: number
 }
 
 export interface List {
-  id: number
   name: string
   owner: string
 }

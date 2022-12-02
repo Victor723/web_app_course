@@ -7,7 +7,6 @@ const client = new MongoClient(url)
 
 const tasks: Task[] = [
   {
-      id: 1,
       name: "Course project",
       description: "Course project fall 22",
       tags: [
@@ -16,14 +15,13 @@ const tasks: Task[] = [
           "fall22"
       ],
       status: "in progress",
-      start_date: "2021-10-01",
-      due_date: "2021-12-31",
+      startDate: "2021-10-01",
+      dueDate: "2021-12-31",
       priority: "high",
       pinned: true,
       list_id: 1
   },
   {
-      id: 2,
       name: "Assignment 1",
       description: "Assignment 1 for fall 22",
       tags: [
@@ -31,14 +29,13 @@ const tasks: Task[] = [
           "fall22"
       ],
       status: "in progress",
-      start_date: "2021-10-01",
-      due_date: "2021-10-31",
+      startDate: "2021-10-01",
+      dueDate: "2021-10-31",
       priority: "high",
       pinned: true,
       list_id: 1
   },
   {
-      id: 3,
       name: "Buy groceries",
       description: "Buy groceries for the week",
       tags: [
@@ -46,14 +43,13 @@ const tasks: Task[] = [
           "food"
       ],
       status: "in progress",
-      start_date: "2021-10-01",
-      due_date: "2021-10-07",
+      startDate: "2021-10-01",
+      dueDate: "2021-10-07",
       priority: "medium",
       pinned: false,
       list_id: 2
   },
   {
-      id: 4,
       name: "Buy a new phone",
       description: "Buy a new phone",
       tags: [
@@ -61,14 +57,13 @@ const tasks: Task[] = [
           "electronics"
       ],
       status: "in progress",
-      start_date: "2021-10-01",
-      due_date: "2021-10-07",
+      startDate: "2021-10-01",
+      dueDate: "2021-10-07",
       priority: "high",
       pinned: false,
       list_id: 2
   },
   {
-      id: 5,
       name: "Buy a new laptop",
       description: "Buy a new laptop",
       tags: [
@@ -76,14 +71,13 @@ const tasks: Task[] = [
           "electronics"
       ],
       status: "in progress",
-      start_date: "2021-10-01",
-      due_date: "2021-10-07",
+      startDate: "2021-10-01",
+      dueDate: "2021-10-07",
       priority: "high",
       pinned: false,
       list_id: 2
   },
   {
-      id: 6,
       "name": "Buy a new car",
       description: "Buy a new car",
       tags: [
@@ -91,14 +85,13 @@ const tasks: Task[] = [
           "transportation"
       ],
       status: "in progress",
-      start_date: "",
-      due_date: "",
+      startDate: "",
+      dueDate: "",
       priority: "high",
       pinned: false,
       list_id: 2
   },
   {
-      id: 7,
       name: "Buy a new house",
       description: "Buy a new house",
       tags: [
@@ -106,8 +99,8 @@ const tasks: Task[] = [
           "real estate"
       ],
       status: "in progress",
-      start_date: "2021-10-01",
-      due_date: "2021-10-07",
+      startDate: "2021-10-01",
+      dueDate: "2021-10-07",
       priority: "high",
       pinned: false,
       list_id: 2
@@ -116,22 +109,18 @@ const tasks: Task[] = [
 
 const lists: List[] = [
   {
-      id: 1,
       name: "School",
       owner: "jd"
   },
   {
-      id: 2,
       name: "Work",
       owner: "jd"
   },
   {
-      id: 3,
       name: "Home",
       owner: "jd"
   },
   {
-      id: 4,
       name: "Test",
       owner: "jd"
   }
@@ -182,17 +171,6 @@ async function main() {
   if (await db.listCollections({ name: "admins" }).hasNext()) {
     console.log("dropping old admins", await db.dropCollection("admins"))
   }
-
-  // set up unique index for upsert
-  db.collection("tasks").createIndex(
-    { id: 1 }, 
-    { unique: true }
-  )
-
-  db.collection("lists").createIndex(
-    { id: 1 }, 
-    { unique: true }
-  )
 
   // add data
   console.log("inserting tasks", await db.collection("tasks").insertMany(tasks as any))
