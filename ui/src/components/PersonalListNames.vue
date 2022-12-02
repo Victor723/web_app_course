@@ -5,8 +5,8 @@
             class="d-flex justify-content-between align-items-center border-0" 
             :class="{ 'font-weight-bold': list.name === selectedList}"
             >
-                <b-button @click="handleClickDeleteList(list.name)">delete</b-button> 
                 <span @click="selectList(list.name)" title="list.name">{{ list.name }}</span>
+                <b-button @click="handleClickDeleteList(list.name)">delete</b-button> 
             </b-list-group-item>
         </draggable>
 
