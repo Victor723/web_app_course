@@ -125,8 +125,10 @@ export const data: TodoList[] = [
 
 
 export async function getLists(): Promise<TodoList[]> {
-	return data
-	// return await (await fetch("/api/lists")).json()
+	// return data
+	const response = await (await fetch("/api/user_lists")).json()
+	console.log(response)
+	return response
 }
 
 export async function getList(listId: Id): Promise<TodoList | null> {
@@ -134,21 +136,21 @@ export async function getList(listId: Id): Promise<TodoList | null> {
 	return await (await fetch(`/api/list/${encoded}/items`)).json()
 }
 
-// export async function addList(name: string): Promise<Id> {
+export async function addList(name: string): Promise<Id> {
 
-// 	return await (await fetch(`/api/add-list`, {
-// 		method: 'POST',
-// 		headers: { 'Content-Type': 'application/json' },
-// 		body: JSON.stringify({ name }) // body data type must match "Content-Type" header
-// 	})).json()
-// }
-export function addList(name: string) {
-	data.push({
-        "id":'x5',
-		'name':name,
-		"items":[]
-    })
+	return await (await fetch(`/api/create_list`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ name }) // body data type must match "Content-Type" header
+	})).json()
 }
+// export function addList(name: string) {
+// 	data.push({
+//         "id":'x5',
+// 		'name':name,
+// 		"items":[]
+//     })
+// }
 
 
 

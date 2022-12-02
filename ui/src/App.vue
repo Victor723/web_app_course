@@ -51,7 +51,12 @@
                 @add="handleClickAddList">
               </PersonalListNames>
 
+
+
+            <b-button @click="refreshLists">Refresh</b-button>
+
             </b-list-group>
+            <Gantt></Gantt>
           </b-card>
         </b-col>
 
@@ -339,6 +344,8 @@ import {TodoItem, TodoList, Id, getLists, addItemToList, addList, getList, delet
         functionalListName, data, cloneTemplateForm, updateItemOnList} from './data'
 import draggable from 'vuedraggable'
 import PersonalListNames from './components/PersonalListNames.vue'
+import Gantt from './Gantt.vue'
+
 // import detail from './components/detail.vue' // for showing necessary details on the right part of the screen
 
 // 1. not allow list/item of same name be created; so that can search by name/string
@@ -373,7 +380,8 @@ provide("user", user)
 onMounted(async () => {
   refreshLists
   user.value = await (await fetch("/api/user")).json()
-  console.log("TEST: tasks:", await (await fetch('/api/tasks')).json())
+  lists.value = await getLists()
+  console.log("TEST: user_list:", await (await fetch('/api/user_lists')).json())
 })
 
 
@@ -435,6 +443,7 @@ function selectList(listName: string) {
 
 async function refreshLists() {
   lists.value = await getLists() 
+  console.log("TEST: lists.value:", lists.value)
   // if a list is selected but the list name isn't in lists
   if (selectedList.value && !lists.value.find(l => l.name == selectedList.value)) { 
     selectedList.value = ''
@@ -505,6 +514,10 @@ function setPin(item: TodoItem) {
   if (item.pinned) {item.pinned = false}
   else {item.pinned = true}
 }
+
+
+
+
   
 
 
