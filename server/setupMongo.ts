@@ -118,30 +118,35 @@ const lists: List[] = [
   {
       id: 1,
       name: "School",
-      owner: "johndoe"
+      owner: "jd"
   },
   {
       id: 2,
       name: "Work",
-      owner: "johndoe"
+      owner: "jd"
   },
   {
       id: 3,
       name: "Home",
-      owner: "janedoe"
+      owner: "jd"
+  },
+  {
+      id: 4,
+      name: "Test",
+      owner: "jd"
   }
 ]
 
-const users: User[] = [
+const users: Partial<User>[] = [
   {
-      _id: "johndoe",
+      _id: "jd",
       name: "John Doe",
-      sub: "87db1582-21a6-427b-b963-45ccfe2fde4d",
-      preferred_username: "johndoe",
-      given_name: "John",
-      family_name: "Doe",
-      email: "johndoe@duke.edu",
-      email_verified: false,
+      // sub: "87db1582-21a6-427b-b963-45ccfe2fde4d",
+      // preferred_username: "johndoe",
+      // given_name: "John",
+      // family_name: "Doe",
+      // email: "johndoe@duke.edu",
+      // email_verified: false,
   }
 ]
 

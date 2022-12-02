@@ -116,6 +116,14 @@ app.get("/api/user_lists", checkAuthenticated, async (req, res) => {
   res.status(200).json(user_lists)
 })
 
+// Create a new list for the current user
+app.post("/api/create_list", checkAuthenticated, async (req, res) => {
+  const list = req.body
+  list.owner = req.user.preferred_username
+  const result = await db.collection("lists").insertOne(list)
+  res.status(200).json(result)
+})
+
 // connect to Mongo
 client.connect().then(() => {
   logger.info('connected successfully to MongoDB')
