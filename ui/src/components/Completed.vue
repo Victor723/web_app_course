@@ -3,7 +3,7 @@
         <div v-for="(list, i) in lists" :key="i" v-if="(list.items.length > 0)">
             <div v-for="(item, j) in list.items" :key="j" v-if="(item.status === 'Done')">
                 <b-list-group-item class="d-flex align-items-center">
-                  <b-form-checkbox @click="handleClickCheckItem(item, i)"/>
+                  <input type="checkbox" checked @click="handleClickCheckItem(item, i)"/>
                     <span @click="loadItem(item, false)" title="item.name"><strike>{{ item.name }}</strike></span> 
                 </b-list-group-item>
             </div>

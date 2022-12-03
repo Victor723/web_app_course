@@ -6,7 +6,8 @@
             :key="i"
             class="d-flex align-items-center"
         >
-            <b-form-checkbox @click="handleClickCheckItem(item, i)"/>
+
+            <input type="checkbox" @click="handleClickCheckItem(item, i)" />
 
             <div v-if="!item.pinned" @click="setPin(item)">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pin-angle" viewBox="0 0 16 16">

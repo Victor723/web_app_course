@@ -143,6 +143,7 @@ const selectedListItems = computed(() => { // return a list of items in a person
 const personalListSelected = computed(() => { // return if a selected list is personal list
   if (selectedList != null){
     if (functionalListName.indexOf(selectedList.value!) == -1) {
+      console.log("!!!!!!!!!!!, selectedList is ''" + selectedList.value + "''")
       return true
     }
   }
@@ -190,10 +191,10 @@ function selectList(listName: string) {
 }
 
 async function refreshLists() {
-  lists.value = await getLists() 
+  lists.value = await getLists()
   // if a list is selected but the list name isn't in lists
-  if (selectedList.value && !lists.value.find(l => l.name == selectedList.value)) { 
-    selectedList.value = ''
+  if (selectedList.value && (!lists.value.find(l => l.name == selectedList.value) && !functionalListName.find(l => l == selectedList.value)))  { 
+    selectedList.value = null
   }
 }
 
@@ -230,9 +231,9 @@ function loadItem(item: TodoItem, toAdd: boolean) { // when an item is clicked o
 }
 
 
-function handleClickCheckItem(item: TodoItem, idx: number) {
-  // updateItemOnList(selectedList.value!.id, itemId, { completed })
-  // refreshSelectedList()
+async function handleClickCheckItem(item: TodoItem) {
+  await updateItemOnList(selectedList.value!, { ...item, status: (item.status == "Done") ? "In Progress" : "Done" })
+  refreshLists()
 }
 
 function setPin(item: TodoItem) {
