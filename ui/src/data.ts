@@ -10,6 +10,7 @@ export interface TodoItem {
 	startDate: string
 	dueDate: string
 	pinned: boolean
+	readableDueDate?: string
 }
 
 // export interface TodoListBasicInfo {
