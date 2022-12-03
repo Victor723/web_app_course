@@ -5,7 +5,6 @@
             id="input-1" 
             v-model="itemDetails.name" 
             placeholder="Christmas dinner menu"
-            type="name" 
             required/>
         </b-form-group>
 
@@ -54,7 +53,7 @@
             :options="[true,false]"/>
         </b-form-group>
 
-        <b-button @click="handleClickSaveItem(itemDetails)" type="submit" variant="primary">Save</b-button>
+        <b-button @click="handleClickSaveItem(itemDetails)" variant="primary">Save</b-button>
     </b-form>
 </template>
 

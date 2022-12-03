@@ -215,11 +215,12 @@ async function refreshSelectedList() {
 async function handleClickSaveItem(itemDetails: TodoItem){
   // if (!isRequiredEmpty){
     if (isAddItem.value){
-      addItemToList(selectedList.value!, itemDetails, lists.value.length) 
+      await addItemToList(selectedList.value!, itemDetails, lists.value.length) 
     } else {
-      updateItemOnList(selectedList.value!, itemDetails)
+      await updateItemOnList(selectedList.value!, itemDetails)
     }
     showItemForm.value = false
+    refreshLists()
 }
 
 function loadItem(item: TodoItem, toAdd: boolean) { // when an item is clicked or the addItem button is clicked
