@@ -116,7 +116,6 @@ app.get("/api/user_lists", checkAuthenticated, async (req, res) => {
   const user_lists = await db.collection("lists").find({ owner: req.user.preferred_username }).toArray()
   const updated_lists = await Promise.all(user_lists.map(async list => {
     const updated_list = Object.assign({}, list, { items: await db.collection("tasks").find({ list_id: list.name }).toArray() })
-    logger.info("updated_list: " + JSON.stringify(updated_list))
     return updated_list
   }))
   res.status(200).json(updated_lists)
@@ -144,15 +143,14 @@ app.post("/api/create_list", checkAuthenticated, async (req, res) => {
 })
 
 // Delete a list for the current user
-app.delete("/api/delete_list/:listId", checkAuthenticated, async (req, res) => {
-  const listId = req.params.listId
-  const objectId = new ObjectId(listId);
-  const list = await db.collection("lists").findOne({ _id: objectId, owner: req.user.preferred_username })
+app.delete("/api/delete_list/:listName", checkAuthenticated, async (req, res) => {
+  const listName = req.params.listName
+  const list = await db.collection("lists").findOne({ name: listName, owner: req.user.preferred_username })
   if (!list) {
     return res.status(400).json({ error: "A list with the given id does not exist" })
   }
-  await db.collection("lists").deleteOne({ _id: objectId, owner: req.user.preferred_username })
-  await db.collection("tasks").deleteMany({ list_id: listId })
+  await db.collection("lists").deleteOne({ name: listName, owner: req.user.preferred_username })
+  await db.collection("tasks").deleteMany({ list_id: listName, owner: req.user.preferred_username })
 
   res.status(200).json({ message: "List deleted" })
 })
