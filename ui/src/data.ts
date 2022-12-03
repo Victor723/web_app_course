@@ -153,20 +153,21 @@ export async function addList(name: string): Promise<Id> {
 
 
 
-export function addItemToList(listName: string, item: TodoItem, len:number) {
-	for (let i = 0; i < len; i++) {
-		data[i]["items"].push(item)
-	}
-}
-// export async function addItemToList(listId: Id, item: Omit<TodoItem, "id">): Promise<Id | null> {
-// 	const encodedListId = encodeURIComponent(listId)
-// 	const response = await fetch(`/api/list/${encodedListId}/add-item`, {
-// 		method: 'POST', // *GET, POST, PUT, DELETE, etc.
-// 		headers: {'Content-Type': 'application/json'},
-// 		body: JSON.stringify( item ) // body data type must match "Content-Type" header
-// 	})
-// 	return response.json()
+// export function addItemToList(listName: string, item: TodoItem, len:number) {
+// 	for (let i = 0; i < len; i++) {
+// 		data[i]["items"].push(item)
+// 	}
 // }
+export async function addItemToList(listId: Id, item: Omit<TodoItem, "id">): Promise<Id | null> {
+	const itemWithListId = { ...item, listId }
+	console.log(itemWithListId)
+	const response = await fetch(`/api/create_task`, {
+		method: 'POST', // *GET, POST, PUT, DELETE, etc.
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify( itemWithListId ) // body data type must match "Content-Type" header
+	})
+	return response.json()
+}
 
 
 export function updateItemOnList(listId: string, update: Partial<TodoItem>) {

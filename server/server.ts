@@ -115,10 +115,19 @@ app.get("/api/lists", async (req, res) => {
 app.get("/api/user_lists", checkAuthenticated, async (req, res) => {
   const user_lists = await db.collection("lists").find({ owner: req.user.preferred_username }).toArray()
   const updated_lists = user_lists.map(list => {
-    const updated_list = Object.assign({}, list, { items: db.collection("tasks").find({ list_id: list._id }).toArray() })
+    const updated_list = Object.assign({}, list, { items: db.collection("tasks").find({ list_id: list.name }).toArray() })
     return updated_list
   })
   res.status(200).json(updated_lists)
+})
+
+// Find all tasks for a given list
+app.get("/api/list/:list_id", checkAuthenticated, async (req, res) => {
+  const list_id = req.params.list_id
+  const list = await db.collection("lists").findOne({ _id: new ObjectId(list_id) })
+  const tasks = await db.collection("tasks").find({ list_id: new ObjectId(list_id) }).toArray()
+  const updated_list = Object.assign({}, list, { items: tasks })
+  res.status(200).json(updated_list)
 })
 
 // Create a new list for the current user
@@ -145,6 +154,28 @@ app.delete("/api/delete_list/:listId", checkAuthenticated, async (req, res) => {
   await db.collection("tasks").deleteMany({ list_id: listId })
 
   res.status(200).json({ message: "List deleted" })
+})
+
+// Create a new task for the current user on the given list
+app.post("/api/create_task", checkAuthenticated, async (req, res) => {
+  const listId = req.body.listId
+  const name = req.body.name
+  const description = req.body.description
+  const tags = req.body.tags
+  const status = req.body.status
+  const priority = req.body.priority
+  const startDate = req.body.startDate
+  const dueDate = req.body.dueDate
+  const pinned = req.body.pinned
+  const existingTask = await db.collection("tasks").findOne({ name
+: name, list_id: listId })
+
+  if (existingTask) {
+    return res.status(400).json({ error: "A task with the given name already exists" })
+  }
+  const task = await db.collection("tasks").insertOne({ name: name, list_id: listId, description: description, tags: tags, status: status, priority: priority, startDate: startDate, dueDate: dueDate, pinned: pinned })
+
+  res.status(200).json(task)
 })
 
 // connect to Mongo

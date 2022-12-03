@@ -253,7 +253,7 @@
                     id="input-1" 
                     v-model="itemDetails.name" 
                     placeholder="Christmas dinner menu"
-                    type="name" 
+
                     required>
                     </b-form-input>
                 </b-form-group>
