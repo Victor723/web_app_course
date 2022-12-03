@@ -160,7 +160,6 @@ export async function addList(name: string): Promise<Id> {
 // }
 export async function addItemToList(listId: Id, item: Omit<TodoItem, "id">): Promise<Id | null> {
 	const itemWithListId = { ...item, listId }
-	console.log(itemWithListId)
 	const response = await fetch(`/api/create_task`, {
 		method: 'POST', // *GET, POST, PUT, DELETE, etc.
 		headers: {'Content-Type': 'application/json'},
@@ -170,20 +169,19 @@ export async function addItemToList(listId: Id, item: Omit<TodoItem, "id">): Pro
 }
 
 
-export function updateItemOnList(listId: string, update: Partial<TodoItem>) {
-	return
-}
-// export async function updateItemOnList(listId: Id, itemId: Id, update: Partial<TodoItem>): Promise<number> {
-// 	const encodedListId = encodeURIComponent(listId)
-// 	const encodedItemId = encodeURIComponent(itemId)
-
-// 	const response = await fetch(`/api/list/${encodedListId}/item/${encodedItemId}`, {
-// 		method: 'PUT', // *GET, POST, PUT, DELETE, etc.
-// 		headers: {'Content-Type': 'application/json'},
-// 		body: JSON.stringify( update ) // body data type must match "Content-Type" header
-// 	})
-// 	return response.json()
+// export function updateItemOnList(listId: string, update: Partial<TodoItem>) {
+// 	return
 // }
+export async function updateItemOnList(listId: Id, item: Partial<TodoItem>): Promise<number> {
+	const itemWithListId = { ...item, listId }
+
+	const response = await fetch(`/api/update_task`, {
+		method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify( itemWithListId ) // body data type must match "Content-Type" header
+	})
+	return response.json()
+}
 
 
 

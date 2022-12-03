@@ -170,13 +170,35 @@ app.post("/api/create_task", checkAuthenticated, async (req, res) => {
   const startDate = req.body.startDate
   const dueDate = req.body.dueDate
   const pinned = req.body.pinned
-  const existingTask = await db.collection("tasks").findOne({ name
-: name, list_id: listId })
+  const existingTask = await db.collection("tasks").findOne({ name: name, list_id: listId })
 
   if (existingTask) {
     return res.status(400).json({ error: "A task with the given name already exists" })
   }
   const task = await db.collection("tasks").insertOne({ name: name, list_id: listId, description: description, tags: tags, status: status, priority: priority, startDate: startDate, dueDate: dueDate, pinned: pinned })
+
+  res.status(200).json(task)
+})
+
+// Update a task for the current user on the given list
+app.put("/api/update_task", checkAuthenticated, async (req, res) => {
+  const taskId = req.body._id
+  const name = req.body.name
+  const description = req.body.description
+  const tags = req.body.tags
+  const status = req.body.status
+  const priority = req.body.priority
+  const startDate = req.body.startDate
+  const dueDate = req.body.dueDate
+  const pinned = req.body.pinned
+  logger.info("update_task: " + JSON.stringify(req.body))
+  const existingTask = await db.collection("tasks").findOne({ _id: new ObjectId(taskId) })
+  logger.info("existingTask: " + JSON.stringify(existingTask))
+
+  if (!existingTask) {
+    return res.status(400).json({ error: "A task with the given id does not exist" })
+  }
+  const task = await db.collection("tasks").updateOne({ _id: new ObjectId(taskId) }, { $set: { name: name, description: description, tags: tags, status: status, priority: priority, startDate: startDate, dueDate: dueDate, pinned: pinned } })
 
   res.status(200).json(task)
 })
