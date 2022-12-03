@@ -206,7 +206,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import moment from "moment";
 
 const colHeight = 38;
