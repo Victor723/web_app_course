@@ -114,10 +114,11 @@ app.get("/api/lists", async (req, res) => {
 
 app.get("/api/user_lists", checkAuthenticated, async (req, res) => {
   const user_lists = await db.collection("lists").find({ owner: req.user.preferred_username }).toArray()
-  const updated_lists = user_lists.map(list => {
-    const updated_list = Object.assign({}, list, { items: db.collection("tasks").find({ list_id: list.name }).toArray() })
+  const updated_lists = await Promise.all(user_lists.map(async list => {
+    const updated_list = Object.assign({}, list, { items: await db.collection("tasks").find({ list_id: list.name }).toArray() })
+    logger.info("updated_list: " + JSON.stringify(updated_list))
     return updated_list
-  })
+  }))
   res.status(200).json(updated_lists)
 })
 
