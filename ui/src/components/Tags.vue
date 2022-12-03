@@ -1,13 +1,9 @@
 <template>
     <div>
         <b-dropdown :text="selectedTagName" block variant="secondary" class="m-2" menu-class="w-100">
-            <div v-for="(list, i) in lists" :key="i" v-if="(list.items.length > 0)">
-                <div v-for="(item, j) in list.items" :key="j" v-if="(item.tags.length > 0)">
-                <b-dropdown-item v-for="(tag, k) in item.tags" :key="k"  @click="handleClickTag(tag)" >
-                    {{tag}}
-                </b-dropdown-item>
-                </div>
-            </div>
+          <b-dropdown-item v-for="(tag, k) in tags" :key="k"  @click="handleClickTag(tag)" >
+              {{tag}}
+          </b-dropdown-item>
         </b-dropdown>
               
         <div v-for="(list, i) in lists" :key="i" v-if="(list.items.length > 0)">
@@ -33,6 +29,7 @@
 
 <script setup lang="ts">
 import {TodoList, TodoItem} from '../data'
+import { computed } from 'vue'
 
 // props
 interface Props {
@@ -47,6 +44,21 @@ const props = withDefaults(defineProps<Props>(), {
   // so as to prevent unexpected mutations of the default value 
   lists: () => [],
   selectedTagName: 'Select a tag'
+})
+
+// computed for tags
+const tags = computed(() => {
+    let tags: string[] = []
+    props.lists.forEach(list => {
+        list.items.forEach(item => {
+            item.tags.forEach(tag => {
+                if (!tags.includes(tag)) {
+                    tags.push(tag)
+                }
+            })
+        })
+    })
+    return tags
 })
 
 // events
