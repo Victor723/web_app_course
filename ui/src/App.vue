@@ -66,8 +66,8 @@
           <div v-if="(selectedList != null)">
             <div v-if="!showItemForm">
               <AllTasks v-if="(selectedList==='All Tasks')" :lists="lists" @load="loadItem" @check="handleClickCheckItem"/>
-              <AllDeadlines v-if="(selectedList==='All Deadlines')" :lists="lists" @load="loadItem" @check="handleClickCheckItem"/>
-              <UpcomingTasks v-if="(selectedList==='Upcoming Tasks')" :lists="lists" @load="loadItem" @check="handleClickCheckItem"/>
+              <AllDeadlines v-if="(selectedList==='All Deadlines')" :lists="filteredLists" @load="loadItem" @check="handleClickCheckItem"/>
+              <UpcomingTasks v-if="(selectedList==='Upcoming Tasks')" :lists="filteredLists" @load="loadItem" @check="handleClickCheckItem"/>
               <!-- Timeline -->
               <Tags v-if="(selectedList==='Tags')" :lists="lists" :selected-tag-name="selectedTagName" @load="loadItem" @select="handleClickTag" @check="handleClickCheckItem"/>
               <Completed v-if="(selectedList==='Completed')" :lists="lists" @load="loadItem" @check="handleClickCheckItem"/>
@@ -152,6 +152,18 @@ const personalListSelected = computed(() => { // return if a selected list is pe
 
 watch(selectedList, () => {selectedTagName.value = 'Select a tag'})
 
+// filtered lists that only contains items with a due date
+// also sort by due date
+const filteredLists = computed(() => {
+  return lists.value.filter(l => l.items.filter(i => i.dueDate != "").length > 0)
+    .map(l => {
+      l.items = l.items.filter(i => i.dueDate != "")
+      l.items.sort((a, b) => {
+        return new Date(a.dueDate!).getTime() - new Date(b.dueDate!).getTime()
+      })
+      return l
+    })
+})
 
 
 ////// functions:
@@ -196,6 +208,7 @@ async function refreshLists() {
   if (selectedList.value && (!lists.value.find(l => l.name == selectedList.value) && !functionalListName.find(l => l == selectedList.value)))  { 
     selectedList.value = null
   }
+  console.log("filteredLists:", filteredLists.value)
 }
 
 async function handleClickDeleteList(listId: string){
