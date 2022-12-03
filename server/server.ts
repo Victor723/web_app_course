@@ -2,7 +2,7 @@ import express, { NextFunction, Request, Response } from 'express'
 import bodyParser from 'body-parser'
 import pino from 'pino'
 import expressPinoLogger from 'express-pino-logger'
-import { Collection, Db, MongoClient } from 'mongodb'
+import { Collection, Db, MongoClient, ObjectId } from 'mongodb'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
 import { Issuer, Strategy } from 'openid-client'
@@ -129,12 +129,22 @@ app.post("/api/create_list", checkAuthenticated, async (req, res) => {
     return res.status(400).json({ error: "A list with the given name already exists" })
   }
   const list = await db.collection("lists").insertOne({ name: name, owner: req.user.preferred_username })
-  
-  // const res = list.map(list => {
-  //   const updated_list = Object.assign({}, list, { items: db.collection("tasks").find({ list_id: list._id }).toArray() })
-  //   return updated_list
-  // })
+
   res.status(200).json(list)
+})
+
+// Delete a list for the current user
+app.delete("/api/delete_list/:listId", checkAuthenticated, async (req, res) => {
+  const listId = req.params.listId
+  const objectId = new ObjectId(listId);
+  const list = await db.collection("lists").findOne({ _id: objectId, owner: req.user.preferred_username })
+  if (!list) {
+    return res.status(400).json({ error: "A list with the given id does not exist" })
+  }
+  await db.collection("lists").deleteOne({ _id: objectId, owner: req.user.preferred_username })
+  await db.collection("tasks").deleteMany({ list_id: listId })
+
+  res.status(200).json({ message: "List deleted" })
 })
 
 // connect to Mongo

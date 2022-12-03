@@ -56,7 +56,7 @@
             <b-button @click="refreshLists">Refresh</b-button>
 
             </b-list-group>
-            <Gantt></Gantt>
+            <!-- <Gantt></Gantt> -->
           </b-card>
         </b-col>
 
@@ -428,10 +428,10 @@ function handleClickShare(thing2share: TodoList[] | TodoList | TodoItem) {
 
 async function handleClickAddList(name: string) {
   if (name != '') {
-    addList(name)
+    await addList(name)
+    await refreshLists()
     selectList(name)
     name = ""
-    refreshLists()
   }
 } 
 
@@ -443,16 +443,15 @@ function selectList(listName: string) {
 
 async function refreshLists() {
   lists.value = await getLists() 
-  console.log("TEST: lists.value:", lists.value)
   // if a list is selected but the list name isn't in lists
   if (selectedList.value && !lists.value.find(l => l.name == selectedList.value)) { 
     selectedList.value = ''
   }
 }
 
-function handleClickDeleteList(listName: string){
-  deleteList(listName)
-  refreshLists()
+async function handleClickDeleteList(listId: string){
+  await deleteList(listId)
+  await refreshLists()
   refreshSelectedList()
 }
 

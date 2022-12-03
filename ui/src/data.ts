@@ -19,7 +19,7 @@ export interface TodoItem {
 // }
 
 export interface TodoList {
-	id: Id
+	_id: Id
 	name: string
 	items: TodoItem[]
 }
@@ -127,7 +127,6 @@ export const data: TodoList[] = [
 export async function getLists(): Promise<TodoList[]> {
 	// return data
 	const response = await (await fetch("/api/user_lists")).json()
-	console.log(response)
 	return response
 }
 
@@ -188,15 +187,15 @@ export function updateItemOnList(listId: string, update: Partial<TodoItem>) {
 
 
 
-export async function deleteList(listName: string){
-	// const encodedListId = encodeURIComponent(listId)
-	// const response = await fetch(`/api/list/${encodedListId}`, {
-	// 	method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
-	// 	headers: {'Content-Type': 'application/json'},
-	// 	body: JSON.stringify( {} ) // body data type must match "Content-Type" header
-	// })
-	// return response.json()
-	data.pop()
+export async function deleteList(listId: string){
+	const encodedListId = encodeURIComponent(listId)
+	const response = await fetch(`/api/delete_list/${encodedListId}`, {
+		method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify( {} ) // body data type must match "Content-Type" header
+	})
+	return response.json()
+	// data.pop()
 }
 
 export async function deleteItemInList(listId: Id, itemId: Id){
