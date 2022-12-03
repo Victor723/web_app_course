@@ -19,7 +19,7 @@ export interface TodoItem {
 // }
 
 export interface TodoList {
-	_id: Id
+	id: Id
 	name: string
 	items: TodoItem[]
 }
