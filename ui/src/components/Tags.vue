@@ -18,7 +18,7 @@
                     v-if="(tag === selectedTagName)"
                     class="d-flex align-items-center"
                 >
-                    <b-form-checkbox v-model="item.status" value="Done"></b-form-checkbox>  
+                    <b-form-checkbox @click="handleClickCheckItem(item, i)"/> 
 
                     <span @click="loadItem(item, false)" title="item.name">{{ item.name }}</span> 
 
@@ -53,6 +53,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (e: 'load', item: TodoItem, save: boolean): void
   (e: 'select', tag: string): void
+  (e: 'check', checked: TodoItem, idx: number): void
 }>()
 
 function loadItem(item: TodoItem, add: boolean) {
@@ -61,6 +62,10 @@ function loadItem(item: TodoItem, add: boolean) {
 
 function handleClickTag(tag: string) {
     emit('select', tag)
+}
+
+function handleClickCheckItem(checked: TodoItem, idx: number) {
+  emit('check', checked, idx)
 }
 
 

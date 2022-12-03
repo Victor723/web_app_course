@@ -6,7 +6,7 @@
             :key="i"
             class="d-flex align-items-center"
         >
-            <b-form-checkbox v-model="item.status" value="Done"></b-form-checkbox>  
+            <b-form-checkbox @click="handleClickCheckItem(item, i)"/>
 
             <div v-if="!item.pinned" @click="setPin(item)">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pin-angle" viewBox="0 0 16 16">
@@ -53,6 +53,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (e: 'setPin', item: TodoItem): void
   (e: 'load', item: TodoItem, add: boolean): void
+  (e: 'check', checked: TodoItem, idx: number): void
 }>()
 
 function setPin(item: TodoItem) {
@@ -61,6 +62,10 @@ function setPin(item: TodoItem) {
 
 function loadItem(item: TodoItem, add: boolean) {
     emit('load', item, add)
+}
+
+function handleClickCheckItem(checked: TodoItem, idx: number) {
+  emit('check', checked, idx)
 }
 
 </script>

@@ -3,12 +3,8 @@
         <div v-for="(list, i) in lists" :key="i" v-if="(list.items.length > 0)">
             <div v-for="(item, j) in list.items" :key="j" v-if="(item.status === 'Done')">
                 <b-list-group-item class="d-flex align-items-center">
-                    <b-form-checkbox v-model="item.status" value="Done"></b-form-checkbox>  
-
-                    <span @click="loadItem(item, false)" title="item.name">
-                    <strike>{{ item.name }}</strike>
-                    </span> 
-
+                  <b-form-checkbox @click="handleClickCheckItem(item, i)"/>
+                    <span @click="loadItem(item, false)" title="item.name"><strike>{{ item.name }}</strike></span> 
                 </b-list-group-item>
             </div>
         </div>
@@ -37,11 +33,15 @@ const props = withDefaults(defineProps<Props>(), {
 // events
 const emit = defineEmits<{
   (e: 'load', item: TodoItem, save: boolean): void
-
+  (e: 'check', checked: TodoItem, idx: number): void
 }>()
 
 function loadItem(item: TodoItem, add: boolean) {
   emit("load", item, add)
+}
+
+function handleClickCheckItem(checked: TodoItem, idx: number) {
+  emit('check', checked, idx)
 }
 
 </script>

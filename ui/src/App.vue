@@ -29,57 +29,61 @@
                   class="border-0"
                   :class="{ 'font-weight-bold': selectedList === listName }"
                 >
-                <span @click="selectList(listName)" title="listName">{{ listName }}</span>
+                <div @click="selectList(listName)" title="listName"><listIcons :list-name="listName"/> {{ listName }} </div>
                 </b-list-group-item>
               </draggable>
-              <b-list-group-item class="border-0" ></b-list-group-item>
-              <b-list-group-item class="d-flex justify-content-between align-items-center border-0" >My Lists</b-list-group-item>
+              <b-list-group-item class="border-0" />
+              <b-list-group-item class="d-flex justify-content-between align-items-center border-0" > 
+                My Lists 
+                <listIcons list-name="add list"  @add-list="clickAddList" @add="handleClickAddList"/>
+              </b-list-group-item>
               <PersonalListNames :lists="lists" :selectedList="selectedList" @delete="handleClickDeleteList" @select="selectList" @add="handleClickAddList"/>
             </b-list-group>
           </b-card>
         </b-col>
 
 
-          <!-- right side of the screen !!! -->
+        <!-- right side of the screen !!! -->
         <b-col>
+          <!-- header -->
+          <div v-if="(selectedList != null)" class="d-flex justify-content-between align-items-center ">
+            <h1><p>{{ selectedList }}</p></h1>
+            <div v-if="(selectedList==='All Tasks' || personalListSelected)">
+              <b-form-tags input-id="tags-basic" placeholder="" v-model="people2Share2"></b-form-tags>
+              <b-button @click="handleClickShare(lists)"> Share </b-button>
+            </div>
+          </div>
 
-            <!-- header -->
-            <div v-if="(selectedList != null)" class="d-flex justify-content-between align-items-center ">
-              <h1><p>{{ selectedList }}</p></h1>
-              <div v-if="(selectedList === 'All Tasks' || personalListSelected)">
-                <b-form-tags input-id="tags-basic" placeholder="" v-model="people2Share2"></b-form-tags>
-                <b-button @click="handleClickShare(lists)"> Share </b-button>
-              </div>
-            </div>
-            <div v-else-if="lists.length != 0" class="d-flex justify-content-between align-items-center ">
-              <p>No list selected!</p>
-            </div>
-            <div v-else>
-              <p>Create a list to start!</p>
-            </div>
+          <div v-else-if="lists.length != 0" class="d-flex justify-content-between align-items-center ">
+            <p>No list selected!</p>
+          </div>
 
+          <div v-else>
+            <p>Create a list to start!</p>
+          </div>
 
           <!-- show things, depending on what is clicked on the left, or if a specific task in a list is clicked -->
           <div v-if="(selectedList != null)">
             <div v-if="!showItemForm">
-              <AllTasks v-if="(selectedList === 'All Tasks')" :lists="lists" @load="loadItem"/>
-              <AllDeadlines v-if="(selectedList === 'All Deadlines')" :lists="lists" @load="loadItem"/>
-              <UpcomingTasks v-if="(selectedList === 'Upcoming Tasks')" :lists="lists" @load="loadItem"/>
+              <AllTasks v-if="(selectedList==='All Tasks')" :lists="lists" @load="loadItem" @check="handleClickCheckItem"/>
+              <AllDeadlines v-if="(selectedList==='All Deadlines')" :lists="lists" @load="loadItem" @check="handleClickCheckItem"/>
+              <UpcomingTasks v-if="(selectedList==='Upcoming Tasks')" :lists="lists" @load="loadItem" @check="handleClickCheckItem"/>
               <!-- Timeline -->
-              <Tags v-if="(selectedList === 'Tags')" :lists="lists" :selected-tag-name="selectedTagName" @load="loadItem" @select="handleClickTag"/>
-              <Completed v-if="(selectedList === 'Completed')" :lists="lists" @load="loadItem"/>
+              <Tags v-if="(selectedList==='Tags')" :lists="lists" :selected-tag-name="selectedTagName" @load="loadItem" @select="handleClickTag" @check="handleClickCheckItem"/>
+              <Completed v-if="(selectedList==='Completed')" :lists="lists" @load="loadItem" @check="handleClickCheckItem"/>
 
               <!-- show items in a personal list -->
-              <PersonalListItems flush v-if="(personalListSelected)" :selected-list-items="selectedListItems" @load="loadItem" @set-pin="setPin"/>
+              <PersonalListItems flush v-if="(personalListSelected)" :selected-list-items="selectedListItems" @load="loadItem" @set-pin="setPin" @check="handleClickCheckItem"/>
             </div>
             <div v-else>
               <ItemForm :item-details="itemDetails" @ClickSaveItem="handleClickSaveItem"/>
             </div>
           </div>
-
         </b-col>
+        
       </b-row>
     </b-container>
+
   </div>
 </template>
 
@@ -99,6 +103,8 @@ import ItemForm from './components/ItemForm.vue'
 import PersonalListItems from './components/PersonalListItems.vue'
 import Completed from './components/Completed.vue'
 import Tags from './components/Tags.vue'
+import listIcons from './components/listIcons.vue'
+
 
 // 1. not allow list/item of same name be created; so that can search by name/string
 // 
@@ -113,7 +119,7 @@ const isAddItem: Ref<boolean> = ref(false) // whether to add item to list when '
 const selectedTagName: Ref<string> = ref('Select a tag')
 const people2Share2: Ref<string[]> = ref([])
 const user = ref({} as any)
-
+const showListNameInput: Ref<boolean> = ref(false)
 
 
 provide("user", user)
@@ -148,6 +154,10 @@ watch(selectedList, () => {selectedTagName.value = 'Select a tag'})
 
 ////// functions:
 
+function clickAddList() {
+  showListNameInput.value = true
+}
+
 function handleClickTag(tag: string) {
   selectedTagName.value = tag
 }
@@ -167,6 +177,7 @@ async function handleClickAddList(name: string) {
     selectList(name)
     name = ""
     refreshLists()
+    showListNameInput.value = false
   }
 } 
 
@@ -207,8 +218,6 @@ async function handleClickSaveItem(itemDetails: TodoItem){
       updateItemOnList(selectedList.value!, itemDetails)
     }
     showItemForm.value = false
-    // call function to show selected list
-  // }
 }
 
 function loadItem(item: TodoItem, toAdd: boolean) { // when an item is clicked or the addItem button is clicked
@@ -218,10 +227,10 @@ function loadItem(item: TodoItem, toAdd: boolean) { // when an item is clicked o
 }
 
 
-// function handleClickCheckItem(item: TodoItem) {
-//   updateItemOnList(selectedList.value!.id, itemId, { completed })
-//   refreshSelectedList()
-// }
+function handleClickCheckItem(item: TodoItem, idx: number) {
+  // updateItemOnList(selectedList.value!.id, itemId, { completed })
+  // refreshSelectedList()
+}
 
 function setPin(item: TodoItem) {
 

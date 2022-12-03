@@ -1,27 +1,14 @@
 <template>
-    <div>
+
         <draggable>
             <b-list-group-item v-for="list, i in lists" :key="i"
             class="d-flex justify-content-between align-items-center border-0" 
             :class="{ 'font-weight-bold': list.name === selectedList}"
             >
-                <span @click="selectList(list.name)" title="list.name">{{ list.name }}</span>
+                <span @click="selectList(list.name)" title="list.name"> <icons :list-name="list.name"/> {{ list.name }}</span>
                 <b-button @click="handleClickDeleteList(list.name)">delete</b-button> 
             </b-list-group-item>
         </draggable>
-
-        <b-list-group-item>
-            <b-input-group>
-
-                <b-form-input v-model="nameOfListToCreate" placeholder="List name" />
-
-                <b-input-group-append>
-                <b-button @click="handleClickAddList(nameOfListToCreate)"><b-icon-plus-circle /></b-button>
-                </b-input-group-append>
-
-            </b-input-group>
-        </b-list-group-item>
-    </div>  
 </template>
 
 
@@ -29,15 +16,13 @@
 <script setup lang="ts">
 import draggable from 'vuedraggable'
 import {TodoList} from '../data'
-import {Ref, ref} from 'vue'
+import icons from './listIcons.vue';
 
-const nameOfListToCreate: Ref<string> = ref('')
 
 // props
 interface Props {
   lists?: TodoList[]
   selectedList?: string | null
-//   nameOfListToCreate?: string
 }
 
 // default values for props
@@ -49,14 +34,12 @@ const props = withDefaults(defineProps<Props>(), {
 
   // no factory function needed for primitive types
   selectedList: null,
-//   nameOfListToCreate: '',
 })
 
 // events
 const emit = defineEmits<{
   (e: 'delete', lstName: string): void
   (e: 'select', lstName: string): void
-  (e: 'add', nameToAdd: string): void
 }>()
 
 function handleClickDeleteList(name: string) {
@@ -64,12 +47,9 @@ function handleClickDeleteList(name: string) {
 }
 
 function selectList(name: string) {
-    emit("select", name)
+  emit("select", name)
 }
 
 
-function handleClickAddList(addName: string) {
-    emit('add', addName)
-}
 
 </script>

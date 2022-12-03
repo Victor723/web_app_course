@@ -5,10 +5,7 @@
                 v-for="item, i in list.items" v-if="(item.status != 'Done' )"
                 :key="i"
                 class="d-flex align-items-center">
-                <b-form-checkbox 
-                    v-model="item.status"
-                    value="Done">
-                </b-form-checkbox>  
+                <b-form-checkbox @click="handleClickCheckItem(item, i)"/> 
                 <span @click="loadItem(item, false)" title="item.name">
                 {{ item.name }}
                 <b-badge pill variant="primary">{{item.dueDate}}</b-badge>
@@ -41,11 +38,15 @@ const props = withDefaults(defineProps<Props>(), {
 // events
 const emit = defineEmits<{
   (e: 'load', lstName: TodoItem, save: boolean): void
-
+  (e: 'check', checked: TodoItem, idx: number): void
 }>()
 
 function loadItem(item: TodoItem, save: boolean) {
   emit("load", item, save)
+}
+
+function handleClickCheckItem(checked: TodoItem, idx: number) {
+  emit('check', checked, idx)
 }
 
 </script>
