@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import VueDjGantt from '@/VueDjGantt.vue';
+import VueDjGantt from '@/components/VueDjGantt.vue';
 import moment from "moment";
 
 export default Vue.extend({
@@ -32,14 +32,14 @@ export default Vue.extend({
           id: "internalId",
           width: 80,
           header: {
-            content: "# ID"
+            content: "List"
           }
         },
         {
           id: "name",
           width: 200,
           header: {
-            content: "Resurce name"
+            content: "Task"
           }
         },
       ],
@@ -66,8 +66,8 @@ export default Vue.extend({
           label: `Some task`,
           style: {background: '#24abf2'},
           time: {
-            start: (+ +new Date()) - (1.2 * 24 * 60 * 60 * 1000),
-            end: (+ +new Date()) + (1 * 24 * 60 * 60 * 1000),
+            start: (+ +new Date("2022-12-07")),
+            end: (+ +new Date("2022-12-15")),
           },
         },
         {

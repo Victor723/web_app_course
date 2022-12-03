@@ -68,7 +68,7 @@
               <AllTasks v-if="(selectedList==='All Tasks')" :lists="lists" @load="loadItem" @check="handleClickCheckItem"/>
               <AllDeadlines v-if="(selectedList==='All Deadlines')" :lists="filteredLists" @load="loadItem" @check="handleClickCheckItem"/>
               <UpcomingTasks v-if="(selectedList==='Upcoming Tasks')" :lists="filteredLists" @load="loadItem" @check="handleClickCheckItem"/>
-              <!-- Timeline -->
+              <Timeline v-if="(selectedList==='Timeline')" :lists="filteredLists" @load="loadItem" @check="handleClickCheckItem"/>
               <Tags v-if="(selectedList==='Tags')" :lists="lists" :selected-tag-name="selectedTagName" @load="loadItem" @select="handleClickTag" @check="handleClickCheckItem"/>
               <Completed v-if="(selectedList==='Completed')" :lists="lists" @load="loadItem" @check="handleClickCheckItem"/>
 
@@ -99,6 +99,7 @@ import PersonalListNames from './components/PersonalListNames.vue'
 import AllTasks from './components/AllTasks.vue'
 import AllDeadlines from './components/AllDeadlines.vue'
 import UpcomingTasks from'./components/UpcomingTasks.vue'
+import Timeline from './components/Timeline.vue'
 import ItemForm from './components/ItemForm.vue'
 import PersonalListItems from './components/PersonalListItems.vue'
 import Completed from './components/Completed.vue'
