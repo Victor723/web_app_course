@@ -66,8 +66,8 @@
           <div v-if="(selectedList != null)">
             <div v-if="!showItemForm">
               <AllTasks v-if="(selectedList==='All Tasks')" :lists="lists" @load="loadItem" @check="handleClickCheckItem"/>
-              <AllDeadlines v-if="(selectedList==='All Deadlines')" :lists="filteredLists" @load="loadItem" @check="handleClickCheckItem"/>
-              <UpcomingTasks v-if="(selectedList==='Upcoming Tasks')" :lists="filteredLists" @load="loadItem" @check="handleClickCheckItem"/>
+              <AllDeadlines v-if="(selectedList==='All Deadlines')" :tasks="allDeadlines" @load="loadItem" @check="handleClickCheckItem"/>
+              <UpcomingTasks v-if="(selectedList==='Upcoming Tasks')" :items="upcomingTasks" @load="loadItem" @check="handleClickCheckItem"/>
               <Timeline v-if="(selectedList==='Timeline')" :lists="filteredLists" @load="loadItem" @check="handleClickCheckItem"/>
               <Tags v-if="(selectedList==='Tags')" :lists="lists" :selected-tag-name="selectedTagName" @load="loadItem" @select="handleClickTag" @check="handleClickCheckItem"/>
               <Completed v-if="(selectedList==='Completed')" :lists="lists" @load="loadItem" @check="handleClickCheckItem"/>
@@ -166,6 +166,45 @@ const filteredLists = computed(() => {
     })
 })
 
+// filter all items with a due date, then sort by due date
+const allDeadlines = computed(() => {
+  let allDeadlines: TodoItem[] = []
+  lists.value.forEach(list => {
+    list.items.forEach(item => {
+      if (item.dueDate != "") {
+        allDeadlines.push(item)
+      }
+    })
+  })
+  allDeadlines.sort((a, b) => {
+    return new Date(a.dueDate!).getTime() - new Date(b.dueDate!).getTime()
+  })
+  return allDeadlines
+})
+
+// filter allDeadline items within 14 days, and add a readableDueDate field
+const upcomingTasks = computed(() => {
+  let upcomingTasks: TodoItem[] = []
+  allDeadlines.value.forEach(item => {
+    let today = new Date()
+    let dueDate = new Date(item.dueDate!)
+    let diffTime = Math.abs(dueDate.getTime() - today.getTime())
+    let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    if (diffDays <= 14) {
+      // also change dueDate to be in the format of 'in x days'
+      if (diffDays == 0) {
+        item.readableDueDate = 'Today'
+      } else if (diffDays == 1) {
+        item.readableDueDate = 'Tomorrow'
+      } else {
+        item.readableDueDate = 'in ' + diffDays + ' days'
+      }
+      upcomingTasks.push(item)
+    }
+  })
+  return upcomingTasks
+})
+
 
 ////// functions:
 
@@ -247,7 +286,7 @@ function loadItem(item: TodoItem, toAdd: boolean) { // when an item is clicked o
 
 async function handleClickCheckItem(item: TodoItem) {
   await updateItemOnList(selectedList.value!, { ...item, status: (item.status == "Done") ? "In Progress" : "Done" })
-  refreshLists()
+  await refreshLists()
 }
 
 function setPin(item: TodoItem) {

@@ -1,10 +1,10 @@
 <template>
     <div>
-        <b-list-group v-for="list, i in lists">
-            <b-list-group-item v-for="item, i in list.items" v-if="(item.status != 'Done' && item.dueDate != '')"
+        <b-list-group>
+            <b-list-group-item v-for="item, i in tasks" v-if="(item.status != 'Done' && item.dueDate != '')"
                 :key="i"
                 class="d-flex align-items-center">
-                <b-form-checkbox @click="handleClickCheckItem(item, i)"/>
+                <input type="checkbox" @click="handleClickCheckItem(item, i)"/>
                 <span @click="loadItem(item, false)" title="item.name">
                 {{ item.name }}
                 <b-badge pill variant="primary">{{item.dueDate}}</b-badge>
@@ -22,7 +22,7 @@ import {TodoList, TodoItem} from '../data'
 
 // props
 interface Props {
-  lists?: TodoList[]
+  tasks?: TodoItem[]
 }
 
 // default values for props
@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
   // NOTE: must use a "factory function" for all Object/Array prop default values
   // the factory function's job is basically to create a clone each time, 
   // so as to prevent unexpected mutations of the default value 
-  lists: () => [],
+  tasks: () => [],
 })
 
 // events

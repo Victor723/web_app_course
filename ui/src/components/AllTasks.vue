@@ -7,7 +7,7 @@
                     v-for="item, i in list.items" v-if="item.status != 'Done'"
                     :key="i"
                     class="d-flex align-items-center">
-                    <b-form-checkbox @click="handleClickCheckItem(item, i)"/>
+                    <input type="checkbox" @click="handleClickCheckItem(item, i)"/>
                     <span @click="loadItem(item, false)" title="item.name">{{ item.name }}</span> 
                 </b-list-group-item>
             </b-list-group>
