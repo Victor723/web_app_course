@@ -7,7 +7,7 @@
             class="d-flex align-items-center"
         >
 
-            <input type="checkbox" @click="handleClickCheckItem(item, i)" />
+            <input type="checkbox" :id="item.name + '_taskck'" @click="handleClickCheckItem(item, i)" />
 
             <div v-if="!item.pinned" @click="setPin(item)">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pin-angle" viewBox="0 0 16 16">
@@ -21,12 +21,12 @@
             </svg>
             </div>
 
-            <span @click="loadItem(item, false)" title="item.name">{{ item.name }}</span> 
+            <span @click="loadItem(item, false)" :id="item.name + '_task'">{{ item.name }}</span> 
             
         </b-list-group-item>
 
         <b-input-group-append>
-            <b-button @click="loadItem(cloneTemplateForm(blankItemForm), true)"> Add a task <b-icon-plus-circle /></b-button>
+            <b-button id="task-add" @click="loadItem(cloneTemplateForm(blankItemForm), true)"> Add a task <b-icon-plus-circle /></b-button>
         </b-input-group-append>
 
     </b-list-group>
