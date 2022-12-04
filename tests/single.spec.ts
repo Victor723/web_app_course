@@ -59,7 +59,7 @@ test('Create and delete list', async ({ page }) => {
   await page.click('#' + listName + '_t')
   
   // Wait for 1 sec, List should be deleted
-  // await expect(page.locator('#' + listName)).toBeNull()
+  await expect(page.locator('#' + listName)).toBeNull()
 })
 
 test('Create and delete task', async ({ page }) => {
@@ -122,12 +122,12 @@ test('Create and delete task', async ({ page }) => {
   await page.click('#' + taskName + '_taskck')
 
   // Wait for 1 sec, Task should be deleted
-  // expect(page.locator('#' + taskName + '_task')).toBeNull()
+  expect(page.locator('#' + taskName + '_task')).toBeNull()
 
   // Delete list
   await page.click('#' + listName + '_d')
   await page.click('#' + listName + '_t')
 
   // Wait for 1 sec, List should be deleted
-  // expect(page.locator('#' + listName)).toBeNull()
+  expect(page.locator('#' + listName)).toBeNull()
 })
