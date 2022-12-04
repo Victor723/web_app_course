@@ -19,7 +19,8 @@ const tasks: Task[] = [
       dueDate: "2021-12-31",
       priority: "high",
       pinned: true,
-      list_id: 1
+      list_id: 1,
+      owner: "admin"
   },
   {
       name: "Assignment 1",
@@ -33,7 +34,8 @@ const tasks: Task[] = [
       dueDate: "2021-10-31",
       priority: "high",
       pinned: true,
-      list_id: 1
+      list_id: 1,
+      owner: "admin"
   },
   {
       name: "Buy groceries",
@@ -47,7 +49,8 @@ const tasks: Task[] = [
       dueDate: "2021-10-07",
       priority: "medium",
       pinned: false,
-      list_id: 2
+      list_id: 2,
+      owner: "admin"
   },
   {
       name: "Buy a new phone",
@@ -61,7 +64,8 @@ const tasks: Task[] = [
       dueDate: "2021-10-07",
       priority: "high",
       pinned: false,
-      list_id: 2
+      list_id: 2,
+      owner: "admin"
   },
   {
       name: "Buy a new laptop",
@@ -75,7 +79,8 @@ const tasks: Task[] = [
       dueDate: "2021-10-07",
       priority: "high",
       pinned: false,
-      list_id: 2
+      list_id: 2,
+      owner: "admin"
   },
   {
       "name": "Buy a new car",
@@ -89,7 +94,8 @@ const tasks: Task[] = [
       dueDate: "",
       priority: "high",
       pinned: false,
-      list_id: 2
+      list_id: 2,
+      owner: "admin"
   },
   {
       name: "Buy a new house",
@@ -103,26 +109,27 @@ const tasks: Task[] = [
       dueDate: "2021-10-07",
       priority: "high",
       pinned: false,
-      list_id: 2
+      list_id: 2,
+      owner: "admin"
   }
 ]
 
 const lists: List[] = [
   {
       name: "School",
-      owner: "jd"
+      owner: "admin"
   },
   {
       name: "Work",
-      owner: "jd"
+      owner: "admin"
   },
   {
       name: "Home",
-      owner: "jd"
+      owner: "admin"
   },
   {
       name: "Test",
-      owner: "jd"
+      owner: "admin"
   }
 ]
 

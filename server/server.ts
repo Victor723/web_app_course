@@ -175,7 +175,7 @@ app.post("/api/create_task", checkAuthenticated, async (req, res) => {
   if (existingTask) {
     return res.status(400).json({ error: "A task with the given name already exists" })
   }
-  const task = await db.collection("tasks").insertOne({ name: name, list_id: listId, description: description, tags: tags, status: status, priority: priority, startDate: startDate, dueDate: dueDate, pinned: pinned })
+  const task = await db.collection("tasks").insertOne({ name: name, list_id: listId, description: description, tags: tags, status: status, priority: priority, startDate: startDate, dueDate: dueDate, pinned: pinned, owner: req.user.preferred_username })
 
   res.status(200).json(task)
 })

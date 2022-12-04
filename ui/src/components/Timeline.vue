@@ -76,18 +76,20 @@ const items = computed(() => {
   let uniIdx = 0;
   for (let i = 0; i < props.lists.length; i++) {
     for (let j = 0; j < props.lists[i].items.length; j++) {
-      items.push({
-        rowId: uniIdx,
-        label: props.lists[i].items[j].name,
-        style: {background: '#24abf2'},
-        time: {
-          start: (props.lists[i].items[j].startDate == "") ? 
-            moment(props.lists[i].items[j].dueDate).subtract(1, 'day').toDate() : 
-            moment(props.lists[i].items[j].startDate).toDate(),
-          end: moment(props.lists[i].items[j].dueDate).toDate(),
-        },
-      })
-      uniIdx++;
+      if (props.lists[i].items[j].status == "In Progress") {
+        items.push({
+          rowId: uniIdx,
+          label: props.lists[i].items[j].name,
+          style: {background: '#24abf2'},
+          time: {
+            start: (props.lists[i].items[j].startDate == "") ? 
+              moment(props.lists[i].items[j].dueDate).subtract(1, 'day').toDate() : 
+              moment(props.lists[i].items[j].startDate).toDate(),
+            end: moment(props.lists[i].items[j].dueDate).toDate(),
+          },
+        })
+        uniIdx++;
+      }
     }
   }
   return items;

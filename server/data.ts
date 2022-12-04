@@ -8,6 +8,7 @@ export interface Task {
   priority: string
   pinned: boolean
   list_id: number
+  owner: string
 }
 
 export interface List {
