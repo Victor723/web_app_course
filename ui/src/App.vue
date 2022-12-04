@@ -21,7 +21,7 @@
       <b-row>
 
         <!-- left side !!!!!! -->
-        <b-col xs="12" sm="4">
+        <b-col xs="12" sm="3">
           <b-card no-body class="mb-3" bg-variant="light">
             <b-list-group flush>
 
@@ -59,7 +59,7 @@
 
 
         <!-- right side of the screen !!! -->
-        <b-col>
+        <b-col xs="12" sm="9">
           <!-- header -->
           <div v-if="(selectedList != null)" class="d-flex justify-content-between align-items-center ">
             <h1><p>{{ selectedList }}</p></h1>
