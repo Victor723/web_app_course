@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App.vue'
-import User from '@/User.vue'
+import User from '@/views/User.vue'
 import DebugScreen from '@/views/DebugScreen.vue'
-import Admin from '@/Admin.vue'
+import Admin from '@/views/Admin.vue'
 
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue"
 

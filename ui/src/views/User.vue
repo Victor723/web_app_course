@@ -1,22 +1,6 @@
 <template>
   <div>
     
-    <b-navbar toggleable="lg" type="dark" :variant="user?.roles?.includes('admin') ? 'info' : 'primary'" >
-      <b-navbar-brand href="#">Get It Done</b-navbar-brand>   
-      <b-navbar-brand href="#">
-        <span v-if="user?.name">Welcome, {{ user.name }}</span>
-        <span v-else>API TESTING PAGE. NOT logged in.</span>
-      </b-navbar-brand>
-      <b-navbar-nav>
-        <b-nav-item href="/">All Orders</b-nav-item>
-        <b-nav-item v-if="user?.roles?.includes('customer')" href="/customer">My Orders</b-nav-item>
-        <b-nav-item v-if="user?.roles?.includes('operator')" href="/operator">My Work Screen</b-nav-item>
-        <b-nav-item v-if="user?.name == null" href="/api/login">Login</b-nav-item>
-        <b-nav-item v-if="user?.name" @click="logout">Logout</b-nav-item>
-        <form method="POST" action="/api/logout" id="logoutForm" />
-      </b-navbar-nav>
-    </b-navbar>
-    
     <b-container fluid class="my-4">
       <b-row>
 
@@ -41,6 +25,7 @@
                 My Lists 
                 <icons 
                   list-name="add list" 
+                  id="list-add"
                   :name-of-list-to-create="nameOfListToCreate" 
                   :show-list-name-input="showListNameInput" 
                   @clickPlus="clickAddList" 
@@ -94,7 +79,7 @@
               <Completed v-if="(selectedList==='Completed')" :lists="lists" @load="loadItem" @check="handleClickCheckItem"/>
 
               <!-- show items in a personal list -->
-              <PersonalListItems flush v-if="(personalListSelected)" :selected-list-items="selectedListItems" @load="loadItem" @set-pin="setPin" @check="handleClickCheckItem"/>
+              <PersonalListItems flush v-if="(personalListSelected)" :selected-list-items="selectedListItems" @load="loadItem" @setPin="setPin" @check="handleClickCheckItem"/>
             </div>
             <div v-else>
               <ItemForm :item-details="itemDetails" @ClickSaveItem="handleClickSaveItem"/>
@@ -114,18 +99,18 @@
 
 import { computed, watch, onMounted, ref, Ref, provide} from 'vue'
 import {TodoItem, TodoList, Id, getLists, addItemToList, addList, getList, deleteList, blankItemForm, 
-        functionalListName, data, cloneTemplateForm, updateItemOnList} from './data'
+        functionalListName, data, cloneTemplateForm, updateItemOnList} from '../data'
 import draggable from 'vuedraggable'
-import PersonalListNames from './components/PersonalListNames.vue'
-import AllTasks from './components/AllTasks.vue'
-import AllDeadlines from './components/AllDeadlines.vue'
-import UpcomingTasks from'./components/UpcomingTasks.vue'
-import Timeline from './components/Timeline.vue'
-import ItemForm from './components/ItemForm.vue'
-import PersonalListItems from './components/PersonalListItems.vue'
-import Completed from './components/Completed.vue'
-import Tags from './components/Tags.vue'
-import icons from './components/icons.vue'
+import PersonalListNames from '../components/PersonalListNames.vue'
+import AllTasks from '../components/AllTasks.vue'
+import AllDeadlines from '../components/AllDeadlines.vue'
+import UpcomingTasks from'../components/UpcomingTasks.vue'
+import Timeline from '../components/Timeline.vue'
+import ItemForm from '../components/ItemForm.vue'
+import PersonalListItems from '../components/PersonalListItems.vue'
+import Completed from '../components/Completed.vue'
+import Tags from '../components/Tags.vue'
+import icons from '../components/icons.vue'
 
 
 // not allow list/item of same name be created; so that can search by name/string ?
@@ -160,7 +145,14 @@ onMounted(async () => {
 // computed ref
 const selectedListItems = computed(() => { // return all items in a personal list
   if (personalListSelected){
-    return lists.value.filter(l => l.name === selectedList.value)[0]['items']
+    let items = lists.value.filter(l => l.name === selectedList.value)[0]['items']
+    // sort items by pin
+    items.sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1
+      if (!a.pinned && b.pinned) return 1
+      return 0
+    })
+    return items
   }
 })
 
@@ -267,7 +259,11 @@ function selectList(listName: string) { // called when a list is clicked
 
 async function refreshLists() {
   lists.value = await getLists()
-  if (personalListSelected && !lists.value.find(l => l.name == selectedList.value)) { // if a list is selected but the list name isn't in lists
+  // if (personalListSelected && !lists.value.find(l => l.name == selectedList.value)) { // if a list is selected but the list name isn't in lists
+  //   selectedList.value = null
+  // }
+
+  if (selectedList.value && (!lists.value.find(l => l.name == selectedList.value) && !functionalListName.find(l => l == selectedList.value)))  { 
     selectedList.value = null
   }
   console.log("filteredLists:", filteredLists.value)
@@ -281,7 +277,7 @@ async function handleClickDeleteList(listId: string){  // do: when the trash bin
 
 async function handleClickSaveItem(itemDetails: TodoItem){ // when save button is clicked in the item form
     if (isAddItem.value){ //if add, not update
-      await addItemToList(selectedList.value!, itemDetails, lists.value.length) 
+      await addItemToList(selectedList.value!, itemDetails) 
     } else { // if only to update, not adding anything
       await updateItemOnList(selectedList.value!, itemDetails)
     }
@@ -304,6 +300,8 @@ async function handleClickCheckItem(item: TodoItem) { // make change in data to 
 
 async function setPin(item: TodoItem) { // make change in data to update item.pin
 // do something
+  console.log("pin set, item is:", item)
+  await updateItemOnList(selectedList.value!, { ...item, pinned: (item.pinned) ? false : true })
   await refreshLists()
 }
   

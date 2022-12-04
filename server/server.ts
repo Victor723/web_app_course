@@ -115,7 +115,7 @@ app.get("/api/lists", async (req, res) => {
 app.get("/api/user_lists", checkAuthenticated, async (req, res) => {
   const user_lists = await db.collection("lists").find({ owner: req.user.preferred_username }).toArray()
   const updated_lists = await Promise.all(user_lists.map(async list => {
-    const items = await db.collection("tasks").find({ list_id: list.name }).toArray()
+    const items = await db.collection("tasks").find({ list_id: list.name, owner: req.user.preferred_username }).toArray()
     // Sort by pinned
     items.sort((a, b) => b.pinned - a.pinned)
     logger.info("items: " + JSON.stringify(items))

@@ -14,7 +14,7 @@
                     v-if="(tag === selectedTagName)"
                     class="d-flex align-items-center"
                 >
-                    <b-form-checkbox @click="handleClickCheckItem(item, i)"/> 
+                    <input type="checkbox" @click="handleClickCheckItem(item, i)"/> 
 
                     <span @click="loadItem(item, false)" title="item.name">{{ item.name }}</span> 
 
