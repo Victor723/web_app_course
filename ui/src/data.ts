@@ -20,7 +20,8 @@ export interface TodoItem {
 // }
 
 export interface TodoList {
-	_id: Id
+	owner: string
+	id: Id
 	name: string
 	items: TodoItem[]
 }
@@ -33,6 +34,7 @@ export const blankItemForm: TodoItem = {name:'', description:'', tags:[], status
 
 export const data: TodoList[] = [
     {
+		'owner':'o1',
         "id":'x1',
 		'name':'School',
 		"items":[
@@ -63,6 +65,7 @@ export const data: TodoList[] = [
 		]
     },
     {
+		'owner':'o2',
         "id":'x3',
 		'name':'Life',
 		"items":[
@@ -81,6 +84,7 @@ export const data: TodoList[] = [
 		]
     },
 	{
+		'owner':'o3',
         "id":'x5',
 		'name':'Work',
 		"items":[

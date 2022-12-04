@@ -21,37 +21,58 @@
       <b-row>
 
         <!-- left side !!!!!! -->
-        <b-col xs="12" sm="4">
+        <b-col xs="12" sm="3">
           <b-card no-body class="mb-3" bg-variant="light">
             <b-list-group flush>
+
+              <!-- functional lists area -->
               <draggable>
                 <b-list-group-item v-for="listName, i in functionalListName" :key="i"
                   class="border-0"
                   :class="{ 'font-weight-bold': selectedList === listName }"
                 >
-                <div @click="selectList(listName)" title="listName"><listIcons :list-name="listName"/> {{ listName }} </div>
+                <div @click="selectList(listName)" title="listName"><icons :list-name="listName"/> {{ listName }} </div>
                 </b-list-group-item>
               </draggable>
               <b-list-group-item class="border-0" />
+
+              <!-- personal lists area -->
               <b-list-group-item class="d-flex justify-content-between align-items-center border-0" > 
                 My Lists 
-                <listIcons list-name="add list"  @add-list="clickAddList" @add="handleClickAddList"/>
+                <icons 
+                  list-name="add list" 
+                  :name-of-list-to-create="nameOfListToCreate" 
+                  :show-list-name-input="showListNameInput" 
+                  @clickPlus="clickAddList" 
+                  @onEnter="onEnterAddList"/>
               </b-list-group-item>
-              <PersonalListNames :lists="lists" :selectedList="selectedList" @delete="handleClickDeleteList" @select="selectList" @add="handleClickAddList"/>
+              <PersonalListNames 
+                :lists="lists" 
+                :selectedList="selectedList" 
+                :show-delete-button-for="showDeleteButtonFor"
+                @delete="handleClickDeleteList" 
+                @select="selectList" 
+                @minus="clickMinusList"/>
             </b-list-group>
           </b-card>
         </b-col>
 
 
         <!-- right side of the screen !!! -->
-        <b-col>
+        <b-col xs="12" sm="9">
           <!-- header -->
           <div v-if="(selectedList != null)" class="d-flex justify-content-between align-items-center ">
             <h1><p>{{ selectedList }}</p></h1>
-            <div v-if="(selectedList==='All Tasks' || personalListSelected)">
-              <b-form-tags input-id="tags-basic" placeholder="" v-model="people2Share2"></b-form-tags>
-              <b-button @click="handleClickShare(lists)"> Share </b-button>
-            </div>
+            <b-list-group-item v-if="(selectedList==='All Tasks' || personalListSelected)" class="d-flex justify-content-between align-items-center border-0">
+              <b-form-tags v-if="showShareInputBox" 
+                v-on:keyup.enter="onEnterUser2share2" 
+                input-id="tags-basic" 
+                placeholder="Add user..." 
+                v-model="people2Share2"/>
+              <svg v-else @click="handleClickShare" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-share" viewBox="0 0 16 16">
+                <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+              </svg>
+            </b-list-group-item>
           </div>
 
           <div v-else-if="lists.length != 0" class="d-flex justify-content-between align-items-center ">
@@ -104,10 +125,10 @@ import ItemForm from './components/ItemForm.vue'
 import PersonalListItems from './components/PersonalListItems.vue'
 import Completed from './components/Completed.vue'
 import Tags from './components/Tags.vue'
-import listIcons from './components/listIcons.vue'
+import icons from './components/icons.vue'
 
 
-// 1. not allow list/item of same name be created; so that can search by name/string
+// not allow list/item of same name be created; so that can search by name/string ?
 // 
 
 
@@ -121,6 +142,9 @@ const selectedTagName: Ref<string> = ref('Select a tag')
 const people2Share2: Ref<string[]> = ref([])
 const user = ref({} as any)
 const showListNameInput: Ref<boolean> = ref(false)
+const nameOfListToCreate: Ref<string> = ref('')
+const showDeleteButtonFor: Ref<string> = ref('')
+const showShareInputBox: Ref<boolean> = ref(false)
 
 
 provide("user", user)
@@ -134,24 +158,27 @@ onMounted(async () => {
 
 
 // computed ref
-const selectedListItems = computed(() => { // return a list of items in a personal list
+const selectedListItems = computed(() => { // return all items in a personal list
   if (personalListSelected){
     return lists.value.filter(l => l.name === selectedList.value)[0]['items']
   }
-  return []
 })
 
 const personalListSelected = computed(() => { // return if a selected list is personal list
   if (selectedList != null){
-    if (functionalListName.indexOf(selectedList.value!) == -1) {
-      console.log("!!!!!!!!!!!, selectedList is ''" + selectedList.value + "''")
-      return true
-    }
+    return functionalListName.indexOf(selectedList.value!) == -1
   }
-  return false
 })
 
-watch(selectedList, () => {selectedTagName.value = 'Select a tag'})
+
+watch(selectedList, () => { // reset after selecting another list
+  selectedTagName.value = 'Select a tag'
+  showListNameInput.value = false
+  nameOfListToCreate.value = ''
+  showDeleteButtonFor.value = ''
+  people2Share2.value = []
+  showShareInputBox.value = false
+})
 
 // filtered lists that only contains items with a due date
 // also sort by due date
@@ -207,74 +234,59 @@ const upcomingTasks = computed(() => {
 
 
 ////// functions:
-
-function clickAddList() {
-  showListNameInput.value = true
-}
-
-function handleClickTag(tag: string) {
-  selectedTagName.value = tag
-}
-
-function logout() {
-  ;(window.document.getElementById('logoutForm') as HTMLFormElement).submit()  
-}
+function clickAddList() {showListNameInput.value = true} // show input area for adding a list
+function clickMinusList(listName: string){showDeleteButtonFor.value = listName} // show trash bin sign when minus sign clicked
+function handleClickShare() {showShareInputBox.value = true} // show share tag input area when share sign clicked
+function handleClickTag(tag: string) {selectedTagName.value = tag} // for changing the name of the dropdown menu in Tags section
 
 
-function handleClickShare(thing2share: TodoList[] | TodoList | TodoItem) {
-  // actually just need to import this function, which calls api to add a list(s) to the desinated user
-}
+function logout() {(window.document.getElementById('logoutForm') as HTMLFormElement).submit()}
 
-async function handleClickAddList(name: string) {
+
+function onEnterUser2share2() {// make changes in database to share corresponding lists to desinated users
+  // do something ...
+  people2Share2.value = []
+  showShareInputBox.value = false
+} 
+
+
+async function onEnterAddList(name: string) { // when enter key is hit for adding a list
   if (name != '') {
     await addList(name)
     await refreshLists()
     selectList(name)
-    name = ""
     refreshLists()
     showListNameInput.value = false
   }
 } 
 
-function selectList(listName: string) {
+function selectList(listName: string) { // called when a list is clicked
   selectedList.value = listName
   showItemForm.value = false
-  // selectedListItem.value = lists.value.filter(l => l.id === listId) || null
 }
 
 async function refreshLists() {
   lists.value = await getLists()
-  // if a list is selected but the list name isn't in lists
-  if (selectedList.value && (!lists.value.find(l => l.name == selectedList.value) && !functionalListName.find(l => l == selectedList.value)))  { 
+  if (personalListSelected && !lists.value.find(l => l.name == selectedList.value)) { // if a list is selected but the list name isn't in lists
     selectedList.value = null
   }
   console.log("filteredLists:", filteredLists.value)
 }
 
-async function handleClickDeleteList(listId: string){
+async function handleClickDeleteList(listId: string){  // do: when the trash bin is clicked, and a list is actually deleted
   await deleteList(listId)
   await refreshLists()
-  refreshSelectedList()
 }
 
 
-async function refreshSelectedList() {
-  if (selectedList.value === null) {return} // if no list is selected, then nothing to refresh
-  // selectedList.value = await getList(selectedList.value)
-}
-
-
-
-
-async function handleClickSaveItem(itemDetails: TodoItem){
-  // if (!isRequiredEmpty){
-    if (isAddItem.value){
+async function handleClickSaveItem(itemDetails: TodoItem){ // when save button is clicked in the item form
+    if (isAddItem.value){ //if add, not update
       await addItemToList(selectedList.value!, itemDetails, lists.value.length) 
-    } else {
+    } else { // if only to update, not adding anything
       await updateItemOnList(selectedList.value!, itemDetails)
     }
     showItemForm.value = false
-    refreshLists()
+    await refreshLists()
 }
 
 function loadItem(item: TodoItem, toAdd: boolean) { // when an item is clicked or the addItem button is clicked
@@ -284,13 +296,15 @@ function loadItem(item: TodoItem, toAdd: boolean) { // when an item is clicked o
 }
 
 
-async function handleClickCheckItem(item: TodoItem) {
+async function handleClickCheckItem(item: TodoItem) { // make change in data to update item status
   await updateItemOnList(selectedList.value!, { ...item, status: (item.status == "Done") ? "In Progress" : "Done" })
   await refreshLists()
 }
 
-function setPin(item: TodoItem) {
 
+async function setPin(item: TodoItem) { // make change in data to update item.pin
+// do something
+  await refreshLists()
 }
   
 
