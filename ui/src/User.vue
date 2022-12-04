@@ -25,6 +25,7 @@
                 My Lists 
                 <icons 
                   list-name="add list" 
+                  id="list-add"
                   :name-of-list-to-create="nameOfListToCreate" 
                   :show-list-name-input="showListNameInput" 
                   @clickPlus="clickAddList" 
