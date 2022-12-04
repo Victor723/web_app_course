@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import App from '@/App.vue'
+import App from './App.vue'
+import User from '@/User.vue'
 import DebugScreen from '@/views/DebugScreen.vue'
+import Admin from '@/Admin.vue'
 
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue"
 
@@ -16,8 +18,12 @@ const router = new VueRouter({
   mode: "history",
   routes: [
     {
-      path: "/",
-      component: DebugScreen,
+      path: "/user",
+      component: User,
+    },
+    {
+      path: "/admin",
+      component: Admin,
     }
   ],
 })
