@@ -98,8 +98,8 @@
 <script setup lang = "ts">
 
 import { computed, watch, onMounted, ref, Ref, provide} from 'vue'
-import {TodoItem, TodoList, Id, getLists, addItemToList, addList, getList, deleteList, blankItemForm, 
-        functionalListName, data, cloneTemplateForm, updateItemOnList} from '../data'
+import {TodoItem, TodoList, getLists, addItemToList, addList, deleteList, blankItemForm, 
+        functionalListName, cloneTemplateForm, updateItemOnList} from '../data'
 import draggable from 'vuedraggable'
 import PersonalListNames from '../components/PersonalListNames.vue'
 import AllTasks from '../components/AllTasks.vue'
@@ -112,9 +112,6 @@ import Completed from '../components/Completed.vue'
 import Tags from '../components/Tags.vue'
 import icons from '../components/icons.vue'
 
-
-// not allow list/item of same name be created; so that can search by name/string ?
-// 
 
 
 // variables
@@ -262,7 +259,6 @@ async function refreshLists() {
   if (selectedList.value && (!lists.value.find(l => l.name == selectedList.value) && !functionalListName.find(l => l == selectedList.value)))  { 
     selectedList.value = null
   }
-  console.log("filteredLists:", filteredLists.value)
 }
 
 async function handleClickDeleteList(listId: string){  // do: when the trash bin is clicked, and a list is actually deleted
@@ -295,8 +291,6 @@ async function handleClickCheckItem(item: TodoItem) { // make change in data to 
 
 
 async function setPin(item: TodoItem) { // make change in data to update item.pin
-// do something
-  console.log("pin set, item is:", item)
   await updateItemOnList(selectedList.value!, { ...item, pinned: (item.pinned) ? false : true })
   await refreshLists()
 }
