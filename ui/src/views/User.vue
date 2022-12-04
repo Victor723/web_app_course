@@ -236,7 +236,6 @@ function logout() {(window.document.getElementById('logoutForm') as HTMLFormElem
 
 
 function onEnterUser2share2() {// make changes in database to share corresponding lists to desinated users
-  // do something ...
   people2Share2.value = []
   showShareInputBox.value = false
 } 
@@ -259,9 +258,6 @@ function selectList(listName: string) { // called when a list is clicked
 
 async function refreshLists() {
   lists.value = await getLists()
-  // if (personalListSelected && !lists.value.find(l => l.name == selectedList.value)) { // if a list is selected but the list name isn't in lists
-  //   selectedList.value = null
-  // }
 
   if (selectedList.value && (!lists.value.find(l => l.name == selectedList.value) && !functionalListName.find(l => l == selectedList.value)))  { 
     selectedList.value = null

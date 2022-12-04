@@ -47,12 +47,6 @@ const users: Partial<User>[] = [
   {
       _id: "jd",
       name: "John Doe",
-      // sub: "87db1582-21a6-427b-b963-45ccfe2fde4d",
-      // preferred_username: "johndoe",
-      // given_name: "John",
-      // family_name: "Doe",
-      // email: "johndoe@duke.edu",
-      // email_verified: false,
   }
 ]
 
